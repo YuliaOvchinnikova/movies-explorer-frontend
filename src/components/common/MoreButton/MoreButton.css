@@ -1,0 +1,33 @@
+.moreButton-section {
+  max-width: calc(100% - 70px*2);
+  margin: 0 auto;
+}
+
+.moreButton-section_empty {
+  height: 140px;
+}
+
+.moreButton-section__button {
+  width: 100%;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+  background-color: #F9F9F9;
+  border-radius: 6px;
+  border: none;
+  margin: 50px 0 80px;
+  padding: 11px 0 9px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1023px) {
+  .moreButton-section {
+    max-width: calc(100% - 30px*2);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .moreButton-section {
+    max-width: calc(100% - 10px*2);
+  }
+}

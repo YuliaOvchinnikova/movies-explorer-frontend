@@ -1,0 +1,135 @@
+.techs-section {
+  background-color: #F5F5F5;
+  overflow: auto
+}
+
+.techs-section__bookmark {
+  margin: 0;
+  padding: 115px 0 23px;
+  margin: 0 auto;
+  max-width: calc(100% - 70px*2);
+}
+
+.bookmark {
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.35;
+  border-bottom: 1px solid #000;
+}
+
+.techs-section__title {
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 1.1;
+  padding: 0;
+  margin: 90px auto 26px;
+  text-align: center;
+  color: #000;
+  max-width: calc(100% - 70px*2);
+}
+
+.techs-section__subtitle {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+  color: #000;
+  max-width: 460px;
+}
+
+.list {
+  display: flex;
+  justify-content: center;
+  margin: 100px auto;
+  padding: 0;
+  width: 690px;
+}
+
+.list__item {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  background-color: #E8E8E8;
+  border-radius: 10px;
+  border: none;
+  list-style: none;
+  margin-right: 10px;
+  width: 90px;
+  text-align: center;
+  padding: 21px 0 22px;
+}
+
+.list__item:last-child {
+  margin-right: 0;
+}
+
+@media screen and (max-width: 1023px) {
+  .techs-section__bookmark {
+    padding: 90px 0 23px;
+    max-width: calc(100% - 50px*2);
+  }
+
+  .techs-section__title {
+    margin: 80px auto 22px;
+    max-width: calc(100% - 50px*2);
+  }
+
+  .techs-section__subtitle {
+    font-size: 12px;
+  }
+
+  .list {
+    margin: 83px auto 90px;
+    width: 459px;
+  }
+
+  .list__item {
+    font-size: 12px;
+    width: 57px;
+    padding: 21px 0 25px;
+  }
+
+}
+
+@media screen and (max-width: 767px) {
+  .techs-section {
+    background-color: #fff;
+  }
+
+  .techs-section__bookmark {
+    padding: 70px 0 28px;
+    max-width: calc(100% - 18px*2);
+  }
+
+  .bookmark {
+    font-size: 18px;
+  }
+
+  .techs-section__title {
+    font-size: 30px;
+    margin: 60px auto 24px;
+    max-width: calc(100% - 18px*2);
+  }
+
+  .techs-section__subtitle {
+    font-size: 11px;
+    max-width: 292px;
+  }
+
+  .list {
+    max-width: calc(100% - 18px*2);
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(2, 84px);
+    grid-template-rows: repeat(3, 1fr);
+    margin: 50px auto 70px;
+  }
+
+  .list__item {
+    font-size: 12px;
+    width: 84px;
+    padding: 21px 0 26px;
+  }
+}
