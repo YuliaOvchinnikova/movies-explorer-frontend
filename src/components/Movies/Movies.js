@@ -10,10 +10,10 @@ import image1 from "../../images/image1.jpg"
 import image2 from "../../images/image2.jpg"
 import image3 from "../../images/image3.jpg"
 
-function Movies() {
+function Movies({handlePopupOpen, width}) {
   return (
     <main className="page">
-      <Header  authorized={true}/>
+      <Header authorized={true} handlePopupOpen={handlePopupOpen} width={width} />
       <SearchForm />
       <MoviesCardList>
         <MoviesCard title="В погоне за Бенкси" duration="27 минут" image={image1} liked={true} saved={false}/>

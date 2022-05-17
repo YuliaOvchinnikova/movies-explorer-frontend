@@ -21,11 +21,18 @@
 .portfolio-item {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   border-bottom: 1px solid #E8E8E8;
   box-sizing: border-box;
+  padding: 20px 0 19px;
+}
+
+.portfolio-item:first-child {
+  padding: 0 0 19px;
 }
 
 .portfolio-item:last-child {
+  padding: 20px 0 0;
   margin-bottom: 125px;
   border: none;
 }
@@ -34,9 +41,11 @@
   text-decoration: none;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   color: #000;
 }
+
 
 .portfolio-item__title {
   font-weight: 400;
@@ -47,8 +56,8 @@
 }
 
 .portfolio-item__arrow {
-  width: 29px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
 }
 
 @media screen and (max-width: 1023px) {
@@ -89,7 +98,7 @@
   }
 
   .portfolio-item__arrow {
-    width: 18px;
-    height: 28px;
+    width: 15px;
+    height: 15px;
   }
 }

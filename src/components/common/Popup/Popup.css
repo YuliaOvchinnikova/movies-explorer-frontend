@@ -4,6 +4,11 @@
   background: rgba(0, 0, 0, .5);
   opacity: 0;
   visibility: hidden;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .popup_opened {
@@ -60,7 +65,6 @@
 }
 
 .popup-navigation__link_account {
-  display: inline-block;
   font-weight: 500;
   font-size: 14px;
   line-height: 1.2;
@@ -83,7 +87,6 @@
 
   .popup-container {
     width: 320px;
-    margin: 0 auto;
   }
 
   .popup__close-button {

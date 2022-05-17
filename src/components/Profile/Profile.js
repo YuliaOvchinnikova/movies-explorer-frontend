@@ -3,10 +3,10 @@ import React from 'react'
 import Header from '../common/Header/Header.js'
 import "./Profile.css"
 
-function Profile() {
+function Profile({handlePopupOpen, width}) {
   return (
     <main className="page">
-      <Header authorized={true}/>
+      <Header authorized={true} handlePopupOpen={handlePopupOpen} width={width} />
       <section className='profile-section'>
         <h1 className='profile-section__title'>Привет, Юлия!</h1>
         <form className='profile-section__form'>

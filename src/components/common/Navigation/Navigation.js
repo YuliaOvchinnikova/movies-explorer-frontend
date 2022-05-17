@@ -3,16 +3,14 @@ import { Link } from 'react-router-dom'
 import profileLogo from "../../../images/profile-logo.svg"
 import "./Navigation.css"
 
-function Navigation({authorized}) {
-  let width = window.innerWidth;
-
+function Navigation({authorized, handlePopupOpen, width}) {
   return (
     <>
     {authorized ? 
     <>
     <nav className='navigation'>
       {width < 1024 ?
-      <button className="navigation__menu"></button>
+      <button className="navigation__menu" onClick={handlePopupOpen}></button>
       :
       <>
         <div className='navigation__cover'>

@@ -1,5 +1,6 @@
 .promo-section {
   background-color: #5C5C5C;
+  overflow: auto;
 }
 
 .greating-section {
@@ -46,13 +47,7 @@
   color: #FFFFFF;
   background-color: #5C5C5C;
   padding: 10px 20px;
-  margin: 0 0 24px 70px;
-}
-
-.line {
-  border-top: 1px solid #fff;
-  height: 50px;
-  background-color: #5C5C5C;
+  margin: 0 0 75px 70px;
 }
 
 @media screen and (max-width: 1023px) {
@@ -87,16 +82,11 @@
     margin: 0 auto 76px;
     width: 131px;
   }
-
-  .line {
-    visibility: hidden;
-    height: 0;
-  }
 }
 
 @media screen and (max-width: 767px) {
   .greating-section {
-    margin: 140px auto 76px;
+    margin: 70px auto 0;
     max-width: calc(100% - 10px*2);
   }
 

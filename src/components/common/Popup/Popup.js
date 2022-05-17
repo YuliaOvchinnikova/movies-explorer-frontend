@@ -3,11 +3,11 @@ import {Link} from "react-router-dom";
 import "./Popup.css";
 import profileLogo from "../../../images/profile-logo.svg"
 
-function Popup() {
+function Popup({handlePopupClose}) {
   return (
-    <div className='popup popup_opened'>
+    <div className={`popup popup_opened`}>
       <div className='popup-container'>
-        <button type='button' className='popup__close-button'></button>
+        <button type='button' className='popup__close-button' onClick={handlePopupClose}></button>
         <nav className='popup-navigation'>
           <Link to="/movies" className='popup-navigation__link interactive-element'>
             Главная
@@ -19,7 +19,7 @@ function Popup() {
             Сохраненные фильмы
           </Link>
           <Link to="/profile" className='popup-navigation__cover interactive-element'>
-            <a className='popup-navigation__link popup-navigation__link_account interactive-element' href='address'>Аккаунт</a>
+            <p className='popup-navigation__link popup-navigation__link_account interactive-element'>Аккаунт</p>
             <img className='popup-navigation__profile-logo interactive-element' src={profileLogo} alt="иконка профайла" />
           </Link>
         </nav>

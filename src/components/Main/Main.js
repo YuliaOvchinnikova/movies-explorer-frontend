@@ -7,10 +7,10 @@ import Portfolio from "./Portfolio/Portfolio.js"
 import Footer from "../common/Footer/Footer.js"
 import "./Main.css"
 
-function Main() {
+function Main({width}) {
   return (
     <main className="page">
-      <Promo />
+      <Promo width={width}/>
       <AboutProject />
       <Techs />
       <AboutMe />
