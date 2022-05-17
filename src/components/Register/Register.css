@@ -1,0 +1,122 @@
+.empty-header {
+  width: 396px;
+  margin: 70px auto 40px;
+}
+
+.empty-header__title {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+  margin: 40px 0 0;
+  padding: 0;
+  color: #000;
+}
+
+.register-section {
+  width: 396px;
+  margin: 0 auto;
+}
+
+.register-section__form {
+  width: 396px;
+}
+
+.register-section__label {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 1.2;
+  color: #A0A0A0;
+  display: block;
+  margin: 24px 0 5px;
+}
+
+.register-section__label:first-child {
+  margin-top: 0;
+}
+
+.register-section__input {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  border: none;
+  border-bottom: 1px solid #E8E8E8;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.register-section__submit-button {
+  border: none;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: #fff;
+  background-color: #2BE080;
+  height: 45px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.2;
+  margin: 150px 0 0;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+.register-section__link-block {
+  color: #A0A0A0;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2px;
+  margin: 15px 0 70px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.register-section__link {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2px;
+  text-align: center;
+  color: #2BE080;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 1023px) {
+  .empty-header {
+    margin: 232px auto 40px;
+  }
+
+  .register-section__link-block {
+    margin: 16px 0 232px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .empty-header {
+    width: 260px;
+    margin: 56px auto 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .register-section {
+    width: 260px;
+  }
+
+  .register-section__form {
+    width: 260px;
+  }
+
+  .register-section__submit-button {
+    font-size: 12px;
+    margin: 157px 0 0;
+  }
+
+  .register-section__link-block {
+    font-size: 12px;
+    margin: 14px 0 30px;
+  }
+
+  .register-section__link {
+    font-size: 12px;
+  }
+}
