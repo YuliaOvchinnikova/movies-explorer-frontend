@@ -1,18 +1,14 @@
-import React from 'react'
-import "./MoviesCardList.css"
-import Preloader from '../../common/Preloader/Preloader.js'
+import React from 'react';
+import './MoviesCardList.css';
 
-function MoviesCardList({children}) {
+function MoviesCardList({ children }) {
   return (
     <>
-    {children ? 
-      <section className='moviesCardList-section'>
-        {children}
-      </section>
-    : <Preloader />
-    }
+      {children && (
+        <section className="moviesCardList-section">{children}</section>
+      )}
     </>
-  )
+  );
 }
 
-export default MoviesCardList
+export default MoviesCardList;
