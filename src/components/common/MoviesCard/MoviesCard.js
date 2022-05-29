@@ -1,7 +1,7 @@
 import React from 'react';
 import './MoviesCard.css';
 
-function MoviesCard({ title, duration, image, liked, saved }) {
+function MoviesCard({ title, duration, image, children }) {
   return (
     <div className="card">
       <div className="card__cover">
@@ -13,21 +13,7 @@ function MoviesCard({ title, duration, image, liked, saved }) {
         src={`https://api.nomoreparties.co/${image}`}
         alt="Картинка"
       />
-      {saved ? (
-        <button className="card__button card__button_saved interactive-element">
-          saved
-        </button>
-      ) : (
-        <button
-          className={
-            liked
-              ? 'card__button card__button_liked interactive-element'
-              : 'card__button interactive-element'
-          }
-        >
-          {liked ? '' : 'Сохранить'}
-        </button>
-      )}
+      {children}
     </div>
   );
 }

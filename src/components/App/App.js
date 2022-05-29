@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Main from '../Main/Main.js';
 import Movies from '../Movies/Movies.js';
 import SavedMovies from '../SavedMovies/SavedMovies';
@@ -9,6 +9,8 @@ import Login from '../Login/Login.js';
 import Register from '../Register/Register.js';
 import Popup from '../common/Popup/Popup.js';
 import moviesApi from '../../utils/MoviesApi.js';
+import mainApi from '../../utils/MainApi.js';
+import { register, login } from '../../utils/Auth.js';
 
 function useWindowSize() {
   const [size, setSize] = useState([window.innerWidth, window.innerHeight]);
@@ -25,6 +27,7 @@ function useWindowSize() {
 
 function App() {
   const [width] = useWindowSize();
+  const navigate = useNavigate();
 
   const storedFilteredMovies = localStorage.getItem('filteredMovies');
   const storedQuery = localStorage.getItem('query');
@@ -39,10 +42,23 @@ function App() {
   );
 
   const [allMovies, setAllMovies] = useState([]);
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isSearchSubmited, setIsSearchSubmited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState(false);
+  const [savedMovies, setSavedMovies] = useState([]);
+
+  useEffect(() => {
+    mainApi
+      .getSavedMovies()
+      .then(({ data }) => {
+        setSavedMovies(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   function handlePopupOpen() {
     setIsPopupOpen(true);
@@ -126,6 +142,56 @@ function App() {
     setIsSearchSubmited(false);
   }, [isSearchSubmited, allMovies]);
 
+  function handleDeleteSavedMovie(id) {
+    mainApi
+      .deleteSavedMovieById(id)
+      .then(() => {
+        const newSavedMovies = savedMovies.filter((movie) => movie.id !== id);
+        setSavedMovies(newSavedMovies);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function registrationSubmit(name, email, password) {
+    register(name, email, password)
+      .then(() => {
+        navigate('/signin');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function loginSubmit(email, password) {
+    login(email, password)
+      .then(() => {
+        navigate('/movies');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleSaveMovie(movie) {
+    console.log(movie);
+    const movieToSave = {
+      ...movie,
+      image: `https://api.nomoreparties.co/${movie.image.url}`,
+      thumbnail: `https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`,
+      movieId: movie.id,
+    };
+    mainApi
+      .saveMovie(movieToSave)
+      .then(({ data }) => {
+        setSavedMovies([...savedMovies, data]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <>
       <Routes>
@@ -142,21 +208,31 @@ function App() {
               query={query}
               isShortMovies={checkbox}
               serverError={serverError}
+              handleSaveMovie={handleSaveMovie}
+              savedMovies={savedMovies}
             />
           }
         />
-        {/* <Route
+        <Route
           path="/saved-movies"
           element={
-            <SavedMovies handlePopupOpen={handlePopupOpen} width={width} />
+            <SavedMovies
+              handlePopupOpen={handlePopupOpen}
+              width={width}
+              savedMovies={savedMovies}
+              handleDeleteSavedMovie={handleDeleteSavedMovie}
+            />
           }
-        /> */}
+        />
         <Route
           path="/profile"
           element={<Profile handlePopupOpen={handlePopupOpen} width={width} />}
         />
-        <Route path="/signin" element={<Login />} />
-        <Route path="/signup" element={<Register />} />
+        <Route path="/signin" element={<Login loginSubmit={loginSubmit} />} />
+        <Route
+          path="/signup"
+          element={<Register registrationSubmit={registrationSubmit} />}
+        />
       </Routes>
       {isPopupOpen && width < 1024 && (
         <Popup handlePopupClose={handlePopupClose} />
