@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../common/Header/Header.js';
 import SearchForm from '../common/SearchForm/SearchForm.js';
 import MoviesCardList from '../common/MoviesCardList/MoviesCardList.js';
@@ -19,7 +19,25 @@ function Movies({
   isLoading,
   query,
   isShortMovies,
+  serverError,
 }) {
+  function calculateInitialCardsNumber() {
+    console.log(width);
+    if (width >= 1280) {
+      return [12, 3];
+    }
+    if (width >= 768) {
+      return [8, 2];
+    }
+    return [5, 1];
+  }
+  const params = calculateInitialCardsNumber();
+  const [cardsNumber, setCardsNumber] = useState(params[0]);
+
+  function handleMoreCards() {
+    setCardsNumber(cardsNumber + params[1]);
+  }
+
   return (
     <main className="page">
       <Header
@@ -36,18 +54,29 @@ function Movies({
         {isLoading && <Preloader />}
         {filteredMovies !== null &&
           !isLoading &&
-          filteredMovies.map((movie) => (
-            <MoviesCard
-              key={movie.id}
-              title={movie.nameRU}
-              duration={movie.duration}
-              image={movie.url}
-              liked={true}
-              saved={false}
-            />
-          ))}
+          filteredMovies
+            .slice(0, cardsNumber)
+            .map((movie) => (
+              <MoviesCard
+                key={movie.id}
+                title={movie.nameRU}
+                duration={movie.duration}
+                image={movie.image.url}
+                liked={true}
+                saved={false}
+              />
+            ))}
+        {filteredMovies.length === 0 && !isLoading && <p>Ничего не найдено</p>}
+        {serverError && (
+          <p>
+            Во время запроса произошла ошибка. Возможно, проблема с соединением
+            или сервер недоступен. Подождите немного и попробуйте ещё раз
+          </p>
+        )}
       </MoviesCardList>
-      <MoreButton saved={false} />
+      {filteredMovies.length > 12 && (
+        <MoreButton saved={false} handleMoreCards={handleMoreCards} />
+      )}
       <Footer />
     </main>
   );

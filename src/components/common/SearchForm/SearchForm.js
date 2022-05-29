@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox.js';
 
 function SearchForm({ handleSearchSubmit, query, isShortMovies }) {
+  const [inputValue, setInputValue] = useState(query);
+
+  function handleOnChange(e) {
+    setInputValue(e.target.value);
+  }
   return (
     <section className="searchForm-section">
       <form className="searchForm" onSubmit={handleSearchSubmit}>
@@ -10,7 +15,8 @@ function SearchForm({ handleSearchSubmit, query, isShortMovies }) {
           <input
             className="searchForm__input interactive-element"
             type="text"
-            value={query}
+            onChange={handleOnChange}
+            value={inputValue}
             id="search"
             name="search"
             placeholder="Фильм"

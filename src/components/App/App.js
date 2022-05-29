@@ -11,7 +11,7 @@ import Popup from '../common/Popup/Popup.js';
 import moviesApi from '../../utils/MoviesApi.js';
 
 function useWindowSize() {
-  const [size, setSize] = useState([0, 0]);
+  const [size, setSize] = useState([window.innerWidth, window.innerHeight]);
   useLayoutEffect(() => {
     function updateSize() {
       setSize([window.innerWidth, window.innerHeight]);
@@ -42,6 +42,7 @@ function App() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isSearchSubmited, setIsSearchSubmited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
   function handlePopupOpen() {
     setIsPopupOpen(true);
@@ -70,18 +71,17 @@ function App() {
     }
   }
 
-  function isShortMovie(movie) {
-    return movie.duration <= 40;
-  }
-
-  function filteredByCheckbox(movie, checkbox) {
-    if (checkbox) {
-      return isShortMovie(movie);
-    }
-    return true;
-  }
-
   useEffect(() => {
+    function isShortMovie(movie) {
+      return movie.duration <= 40;
+    }
+
+    function filteredByCheckbox(movie, checkbox) {
+      if (checkbox) {
+        return isShortMovie(movie);
+      }
+      return true;
+    }
     if (!isSearchSubmited) {
       return;
     }
@@ -91,8 +91,6 @@ function App() {
     const checkbox = localStorage.getItem('checkbox')
       ? JSON.parse(localStorage.getItem('checkbox'))
       : false;
-
-    console.log('checkbox', checkbox);
 
     function updateFilteredMovies() {
       const filtered = allMovies.filter(
@@ -113,19 +111,21 @@ function App() {
       moviesApi
         .getAllMovies()
         .then((data) => {
-          console.log(data);
           setAllMovies(data);
           updateFilteredMovies();
           setIsLoading(false);
         })
         .catch((err) => {
+          setIsLoading(false);
+          if (err.statusCode === 500) {
+            setServerError(true);
+          }
           console.log(err);
         });
     }
-
     setIsSearchSubmited(false);
   }, [isSearchSubmited, allMovies]);
-  console.log(filteredMovies);
+
   return (
     <>
       <Routes>
@@ -141,6 +141,7 @@ function App() {
               isLoading={isLoading}
               query={query}
               isShortMovies={checkbox}
+              serverError={serverError}
             />
           }
         />

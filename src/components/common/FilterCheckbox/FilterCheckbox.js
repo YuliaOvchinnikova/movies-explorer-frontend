@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './FilterCheckbox.css';
 
 export default function FilterCheckbox({ isShortMovies }) {
-  console.log(isShortMovies);
   const [checkbox, setCheckbox] = useState(isShortMovies);
 
   function handleCheckboxClick() {
