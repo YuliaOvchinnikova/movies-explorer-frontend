@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
 import Main from '../Main/Main.js';
 import Movies from '../Movies/Movies.js';
 import SavedMovies from '../SavedMovies/SavedMovies';
@@ -10,11 +10,13 @@ import Register from '../Register/Register.js';
 import Popup from '../common/Popup/Popup.js';
 import { register, login } from '../../utils/Auth.js';
 import useWindowSize from '../../utils/useWindowSize.js';
+import ProtectedRoute from '../ProtectedRoute.js';
 
 function App() {
   const [width] = useWindowSize();
   const navigate = useNavigate();
 
+  const [userAuthorized, setUserAuthorized] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   function handlePopupOpen() {
@@ -38,6 +40,7 @@ function App() {
   function loginSubmit(email, password) {
     login(email, password)
       .then(() => {
+        setUserAuthorized(true);
         navigate('/movies');
       })
       .catch((err) => {
@@ -48,25 +51,46 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Main width={width} />} />
         <Route
           path="/movies"
-          element={<Movies handlePopupOpen={handlePopupOpen} width={width} />}
+          element={
+            <ProtectedRoute autorized={userAuthorized}>
+              <Movies handlePopupOpen={handlePopupOpen} width={width} />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/saved-movies"
           element={
-            <SavedMovies handlePopupOpen={handlePopupOpen} width={width} />
+            <ProtectedRoute autorized={userAuthorized}>
+              <SavedMovies handlePopupOpen={handlePopupOpen} width={width} />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/profile"
-          element={<Profile handlePopupOpen={handlePopupOpen} width={width} />}
+          element={
+            <ProtectedRoute autorized={userAuthorized}>
+              <Profile handlePopupOpen={handlePopupOpen} width={width} />
+            </ProtectedRoute>
+          }
         />
+
+        <Route path="/" element={<Main width={width} />} />
         <Route path="/signin" element={<Login loginSubmit={loginSubmit} />} />
         <Route
           path="/signup"
           element={<Register registrationSubmit={registrationSubmit} />}
+        />
+        <Route
+          path="*"
+          element={
+            userAuthorized ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Navigate to="/signin" replace />
+            )
+          }
         />
       </Routes>
       {isPopupOpen && width < 1024 && (
