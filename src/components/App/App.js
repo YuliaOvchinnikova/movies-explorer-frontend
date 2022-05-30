@@ -41,7 +41,7 @@ function App() {
     login(email, password)
       .then(() => {
         setUserAuthorized(true);
-        navigate('/movies');
+        navigate('/movies', { replace: true });
       })
       .catch((err) => {
         console.log(err);
@@ -54,7 +54,7 @@ function App() {
         <Route
           path="/movies"
           element={
-            <ProtectedRoute autorized={userAuthorized}>
+            <ProtectedRoute authorized={userAuthorized}>
               <Movies handlePopupOpen={handlePopupOpen} width={width} />
             </ProtectedRoute>
           }
@@ -62,7 +62,7 @@ function App() {
         <Route
           path="/saved-movies"
           element={
-            <ProtectedRoute autorized={userAuthorized}>
+            <ProtectedRoute authorized={userAuthorized}>
               <SavedMovies handlePopupOpen={handlePopupOpen} width={width} />
             </ProtectedRoute>
           }
@@ -70,7 +70,7 @@ function App() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute autorized={userAuthorized}>
+            <ProtectedRoute authorized={userAuthorized}>
               <Profile handlePopupOpen={handlePopupOpen} width={width} />
             </ProtectedRoute>
           }
