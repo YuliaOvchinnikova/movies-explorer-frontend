@@ -75,6 +75,9 @@ function Register({ registrationSubmit }) {
             required
             max-length="4"
           />
+          <span className="popup__input-error about-input-error">
+            Что-то пошло не так...
+          </span>
           <button
             className="register-section__submit-button interactive-element"
             type="submit"

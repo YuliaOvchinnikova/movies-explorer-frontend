@@ -2,18 +2,37 @@ import React, { useState, useEffect } from 'react';
 import Header from '../common/Header/Header.js';
 import SearchForm from '../common/SearchForm/SearchForm.js';
 import MoviesCardList from '../common/MoviesCardList/MoviesCardList.js';
-import MoreButton from '../common/MoreButton/MoreButton.js';
 import Footer from '../common/Footer/Footer.js';
 import MoviesCard from '../common/MoviesCard/MoviesCard.js';
+import mainApi from '../../utils/MainApi.js';
 
 import './SavedMovies.css';
 
-function SavedMovies({
-  handlePopupOpen,
-  width,
-  savedMovies,
-  handleDeleteSavedMovie,
-}) {
+function SavedMovies({ handlePopupOpen, width }) {
+  const [savedMovies, setSavedMovies] = useState([]);
+  useEffect(() => {
+    mainApi
+      .getSavedMovies()
+      .then(({ data }) => {
+        setSavedMovies(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  function handleDeleteSavedMovie(id) {
+    mainApi
+      .deleteSavedMovieById(id)
+      .then(() => {
+        const newSavedMovies = savedMovies.filter((movie) => movie.id !== id);
+        setSavedMovies(newSavedMovies);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <main className="page">
       <Header
