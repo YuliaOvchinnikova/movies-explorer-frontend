@@ -1,29 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../components/common/Logo/Logo.js';
+import useFormWithValidation from '../../utils/useFormWithValidation.js';
 import './Register.css';
 
 function Register({ registrationSubmit }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  function handleChangeName(e) {
-    setName(e.target.value);
-  }
-
-  function handleChangeEmail(e) {
-    setEmail(e.target.value);
-  }
-
-  function handleChangePassword(e) {
-    setPassword(e.target.value);
-  }
+  const [values, handleChange, errors, isValid, resetForm] =
+    useFormWithValidation();
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    registrationSubmit(name, email, password);
+    registrationSubmit(values);
   }
 
   return (
@@ -42,8 +30,8 @@ function Register({ registrationSubmit }) {
             name="name"
             type="text"
             placeholder="Name"
-            value={name}
-            onChange={handleChangeName}
+            value={values.name ? values.name : ''}
+            onChange={handleChange}
             required
             max-length="3"
             min-length="15"
@@ -56,8 +44,8 @@ function Register({ registrationSubmit }) {
             name="email"
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={handleChangeEmail}
+            value={values.email ? values.email : ''}
+            onChange={handleChange}
             required
             max-length="5"
             min-length="30"
@@ -70,17 +58,18 @@ function Register({ registrationSubmit }) {
             name="password"
             type="password"
             placeholder="Пароль"
-            value={password}
-            onChange={handleChangePassword}
+            value={values.password ? values.password : ''}
+            onChange={handleChange}
             required
             max-length="4"
           />
-          <span className="popup__input-error about-input-error">
+          {/* <span className="popup__input-error about-input-error">
             Что-то пошло не так...
-          </span>
+          </span> */}
           <button
             className="register-section__submit-button interactive-element"
             type="submit"
+            disabled={!isValid}
           >
             Зарегистироваться
           </button>

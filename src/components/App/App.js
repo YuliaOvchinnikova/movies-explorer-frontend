@@ -27,7 +27,7 @@ function App() {
     setIsPopupOpen(false);
   }
 
-  function registrationSubmit(name, email, password) {
+  function registrationSubmit({ name, email, password }) {
     register(name, email, password)
       .then(() => {
         navigate('/signin');
