@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useFormWithValidation from '../../utils/useFormWithValidation.js';
 import Header from '../common/Header/Header.js';
 import './Profile.css';
@@ -6,6 +6,7 @@ import { UserContext } from '../../utils/userContext.js';
 
 function Profile({ handlePopupOpen, width, profileSubmit }) {
   const currentUser = React.useContext(UserContext);
+  const [isEditing, setIsEditing] = useState(false);
 
   const [values, handleChange, errors, isValid, resetForm] =
     useFormWithValidation();
@@ -39,6 +40,7 @@ function Profile({ handlePopupOpen, width, profileSubmit }) {
               required
               max-length="3"
               min-length="15"
+              disabled={!isEditing}
             />
             {errors?.name && (
               <span className="profile-section__input-error">
@@ -60,6 +62,7 @@ function Profile({ handlePopupOpen, width, profileSubmit }) {
               required
               max-length="5"
               min-length="30"
+              disabled={!isEditing}
             />
             {errors?.email && (
               <span className="profile-section__input-error">
@@ -67,24 +70,32 @@ function Profile({ handlePopupOpen, width, profileSubmit }) {
               </span>
             )}
           </div>
+          {isEditing && (
+            <button
+              className="profile-section__save-button interactive-element interactive-element"
+              disabled={!isValid}
+            >
+              Сохранить
+            </button>
+          )}
         </form>
-        <button
-          className={
-            isValid
-              ? 'profile-section__edit-button interactive-element'
-              : 'profile-section__edit-button profile-section__edit-button_disable'
-          }
-          type="submit"
-          disabled={!isValid ? true : false}
-        >
-          Редактировать
-        </button>
+        {!isEditing && (
+          <button
+            className={
+              isValid
+                ? 'profile-section__edit-button interactive-element'
+                : 'profile-section__edit-button profile-section__edit-button_disable'
+            }
+            type="button"
+            onClick={() => setIsEditing(true)}
+          >
+            Редактировать
+          </button>
+        )}
         <button className="profile-section__logout-button interactive-element">
           Выйти из аккаунта
         </button>
-        <button className="profile-section__save-button interactive-element interactive-element">
-          Выйти из аккаунта
-        </button>
+
         <p className="profile-section__error">Текст ошибки</p>
         <button className="profile-section__save-button profile-section__save-button_disable interactive-element">
           Выйти из аккаунта
