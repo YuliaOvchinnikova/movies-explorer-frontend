@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
 import Main from '../Main/Main.js';
@@ -9,6 +9,7 @@ import Login from '../Login/Login.js';
 import Register from '../Register/Register.js';
 import Popup from '../common/Popup/Popup.js';
 import { register, login } from '../../utils/Auth.js';
+import mainApi from '../../utils/MainApi.js';
 import useWindowSize from '../../utils/useWindowSize.js';
 import ProtectedRoute from '../ProtectedRoute.js';
 
@@ -17,7 +18,30 @@ function App() {
   const navigate = useNavigate();
 
   const [userAuthorized, setUserAuthorized] = useState(false);
+  const [userInfoLoading, setUserInfoLoading] = useState(true);
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState();
+
+  useEffect(() => {
+    mainApi
+      .getUserInfo()
+      .then((res) => {
+        if (res && res.data.email !== '') {
+          localStorage.setItem('email', res.data.email);
+          setUserInfoLoading(false);
+          setUserAuthorized(true);
+          navigate('/movies');
+        }
+      })
+      .catch((err) => {
+        if (err.status === 401) {
+          setUserInfoLoading(false);
+        } else {
+          console.log(err.text);
+        }
+      });
+  }, [userInfoLoading, userAuthorized, navigate]);
 
   function handlePopupOpen() {
     setIsPopupOpen(true);
@@ -37,15 +61,31 @@ function App() {
       });
   }
 
-  function loginSubmit(email, password) {
+  function loginSubmit({ email, password }) {
     login(email, password)
       .then(() => {
+        localStorage.setItem('email', email);
         setUserAuthorized(true);
         navigate('/movies', { replace: true });
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  function profileSubmit({ name, email }) {
+    mainApi
+      .changeUserInfo(name, email)
+      .then((user) => {
+        setCurrentUser(user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  if (userInfoLoading) {
+    return <div></div>;
   }
 
   return (
@@ -71,7 +111,11 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute authorized={userAuthorized}>
-              <Profile handlePopupOpen={handlePopupOpen} width={width} />
+              <Profile
+                handlePopupOpen={handlePopupOpen}
+                width={width}
+                profileSubmit={profileSubmit}
+              />
             </ProtectedRoute>
           }
         />

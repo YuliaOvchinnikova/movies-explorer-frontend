@@ -62,8 +62,8 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  deleteSavedMovieById(id) {
-    return fetch(`${this._address}/movies/${id}`, {
+  deleteSavedMovieById(_id) {
+    return fetch(`${this._address}/movies/${_id}`, {
       method: 'DELETE',
       headers: {
         authorization: this._token,
@@ -73,30 +73,30 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  // getUserInfo() {
-  //   return fetch(`${this._address}/users/me`, {
-  //     headers: {
-  //       authorization: this._token,
-  //       'Content-Type': 'application/json',
-  //     },
-  //     credentials: 'include',
-  //   }).then(this._checkResponse);
-  // }
+  getUserInfo() {
+    return fetch(`${this._address}/users/me`, {
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    }).then(this._checkResponse);
+  }
 
-  // changeUserInfo(name, about) {
-  //   return fetch(`${this._address}/users/me`, {
-  //     method: 'PATCH',
-  //     headers: {
-  //       authorization: this._token,
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       name: name,
-  //       about: about,
-  //     }),
-  //     credentials: 'include',
-  //   }).then(this._checkResponse);
-  // }
+  changeUserInfo(name, about) {
+    return fetch(`${this._address}/users/me`, {
+      method: 'PATCH',
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        about: about,
+      }),
+      credentials: 'include',
+    }).then(this._checkResponse);
+  }
 }
 
 const config = {
