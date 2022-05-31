@@ -117,7 +117,6 @@ function Movies({ handlePopupOpen, width }) {
   }, [isSearchSubmited, allMovies]);
 
   function handleSaveMovie(movie) {
-    console.log(movie);
     const movieToSave = {
       ...movie,
       image: `https://api.nomoreparties.co/${movie.image.url}`,
@@ -135,10 +134,16 @@ function Movies({ handlePopupOpen, width }) {
   }
 
   function handleDeleteSavedMovie(id) {
+    const movieToDelete = savedMovies.find((movie) => movie.movieId === id);
+    if (!movieToDelete) {
+      return;
+    }
     mainApi
-      .deleteSavedMovieById(id)
+      .deleteSavedMovieById(movieToDelete._id)
       .then(() => {
-        const newSavedMovies = savedMovies.filter((movie) => movie.id !== id);
+        const newSavedMovies = savedMovies.filter(
+          (movie) => movie.movieId !== id
+        );
         setSavedMovies(newSavedMovies);
       })
       .catch((err) => {
@@ -187,7 +192,7 @@ function Movies({ handlePopupOpen, width }) {
               key={movie.id}
               title={movie.nameRU}
               duration={movie.duration}
-              image={movie.image.url}
+              image={`https://api.nomoreparties.co/${movie.image.url}`}
             >
               {isMovieSaved(movie.id) ? (
                 <button

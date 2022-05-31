@@ -10,6 +10,7 @@ import './SavedMovies.css';
 
 function SavedMovies({ handlePopupOpen, width }) {
   const [savedMovies, setSavedMovies] = useState([]);
+  console.log(savedMovies);
   useEffect(() => {
     mainApi
       .getSavedMovies()
@@ -22,10 +23,12 @@ function SavedMovies({ handlePopupOpen, width }) {
   }, []);
 
   function handleDeleteSavedMovie(id) {
+    console.log(savedMovies);
+    console.log(id);
     mainApi
       .deleteSavedMovieById(id)
       .then(() => {
-        const newSavedMovies = savedMovies.filter((movie) => movie.id !== id);
+        const newSavedMovies = savedMovies.filter((movie) => movie._id !== id);
         setSavedMovies(newSavedMovies);
       })
       .catch((err) => {
@@ -44,15 +47,15 @@ function SavedMovies({ handlePopupOpen, width }) {
       <MoviesCardList>
         {savedMovies.map((savedMovie) => (
           <MoviesCard
-            key={savedMovie.id}
+            key={savedMovie._id}
             title={savedMovie.nameRU}
             duration={savedMovie.duration}
-            image={savedMovie.image.url}
+            image={savedMovie.image}
           >
             <button
               className="card__button card__button_saved interactive-element"
               type="button"
-              onClick={() => handleDeleteSavedMovie(savedMovie.id)}
+              onClick={() => handleDeleteSavedMovie(savedMovie._id)}
             >
               saved
             </button>
