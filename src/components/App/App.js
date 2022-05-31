@@ -12,6 +12,7 @@ import { register, login } from '../../utils/Auth.js';
 import mainApi from '../../utils/MainApi.js';
 import useWindowSize from '../../utils/useWindowSize.js';
 import ProtectedRoute from '../ProtectedRoute.js';
+import { UserContext } from '../../utils/userContext.js';
 
 function App() {
   const [width] = useWindowSize();
@@ -28,7 +29,7 @@ function App() {
       .getUserInfo()
       .then((res) => {
         if (res && res.data.email !== '') {
-          localStorage.setItem('email', res.data.email);
+          setCurrentUser(res.data);
           setUserInfoLoading(false);
           setUserAuthorized(true);
           navigate('/movies');
@@ -41,7 +42,7 @@ function App() {
           console.log(err.text);
         }
       });
-  }, [userInfoLoading, userAuthorized, navigate]);
+  }, [userInfoLoading, userAuthorized]);
 
   function handlePopupOpen() {
     setIsPopupOpen(true);
@@ -64,7 +65,6 @@ function App() {
   function loginSubmit({ email, password }) {
     login(email, password)
       .then(() => {
-        localStorage.setItem('email', email);
         setUserAuthorized(true);
         navigate('/movies', { replace: true });
       })
@@ -74,20 +74,21 @@ function App() {
   }
 
   function profileSubmit({ name, email }) {
-    mainApi
-      .changeUserInfo(name, email)
-      .then((user) => {
-        setCurrentUser(user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // mainApi
+    //   .changeUserInfo(name, email)
+    //   .then((user) => {
+    //     setCurrentUser(user);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }
 
   if (userInfoLoading) {
     return <div></div>;
   }
 
+  console.log(userAuthorized);
   return (
     <>
       <Routes>
@@ -111,11 +112,13 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute authorized={userAuthorized}>
-              <Profile
-                handlePopupOpen={handlePopupOpen}
-                width={width}
-                profileSubmit={profileSubmit}
-              />
+              <UserContext.Provider value={currentUser}>
+                <Profile
+                  handlePopupOpen={handlePopupOpen}
+                  width={width}
+                  profileSubmit={profileSubmit}
+                />
+              </UserContext.Provider>
             </ProtectedRoute>
           }
         />
