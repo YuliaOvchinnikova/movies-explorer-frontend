@@ -29,10 +29,9 @@ function App() {
       .getUserInfo()
       .then((res) => {
         if (res && res.data.email !== '') {
+          setUserAuthorized(true);
           setCurrentUser(res.data);
           setUserInfoLoading(false);
-          setUserAuthorized(true);
-          navigate('/movies');
         }
       })
       .catch((err) => {
@@ -77,7 +76,6 @@ function App() {
     return <div></div>;
   }
 
-  // console.log(userAuthorized);
   return (
     <>
       <Routes>
@@ -108,7 +106,16 @@ function App() {
           }
         />
 
-        <Route path="/" element={<Main width={width} />} />
+        <Route
+          path="/"
+          element={
+            userAuthorized ? (
+              <Navigate to="/movies" replace />
+            ) : (
+              <Main width={width} />
+            )
+          }
+        />
         <Route path="/signin" element={<Login loginSubmit={loginSubmit} />} />
         <Route
           path="/signup"

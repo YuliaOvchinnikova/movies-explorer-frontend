@@ -10,7 +10,6 @@ import './SavedMovies.css';
 
 function SavedMovies({ handlePopupOpen, width }) {
   const [savedMovies, setSavedMovies] = useState([]);
-  console.log(savedMovies);
   useEffect(() => {
     mainApi
       .getSavedMovies()
@@ -23,8 +22,6 @@ function SavedMovies({ handlePopupOpen, width }) {
   }, []);
 
   function handleDeleteSavedMovie(id) {
-    console.log(savedMovies);
-    console.log(id);
     mainApi
       .deleteSavedMovieById(id)
       .then(() => {
