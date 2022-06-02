@@ -36,14 +36,14 @@ function Profile({ handlePopupOpen, width }) {
       .then(() => {
         localStorage.removeItem('query');
         localStorage.removeItem('checkbox');
-        localStorage.removeItem('savedMovies');
+        localStorage.removeItem('filteredMovies');
         setUserAuthorized(false);
         navigate('/');
       })
       .catch((err) => {
         localStorage.removeItem('query');
         localStorage.removeItem('checkbox');
-        localStorage.removeItem('savedMovies');
+        localStorage.removeItem('filteredMovies');
         setUserAuthorized(false);
         navigate('/');
         console.log(err);

@@ -17,7 +17,7 @@ function Movies({ handlePopupOpen, width }) {
   const storedcheckbox = localStorage.getItem('checkbox');
 
   const [filteredMovies, setFilteredMovies] = useState(
-    storedFilteredMovies !== null ? JSON.parse(storedFilteredMovies) : []
+    storedFilteredMovies !== null ? JSON.parse(storedFilteredMovies) : null
   );
   const [query, setQuery] = useState(storedQuery !== null ? storedQuery : '');
   const [checkbox, setCheckbox] = useState(
@@ -25,10 +25,11 @@ function Movies({ handlePopupOpen, width }) {
   );
 
   const [allMovies, setAllMovies] = useState([]);
-  const [isSearchSubmited, setIsSearchSubmited] = useState(false);
+  const [isAllMoviesLoading, setAllMoviesIsLoading] = useState(false);
 
   const [savedMovies, setSavedMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSavedMoviesLoading, setSavedMoviesIsLoading] = useState(false);
+
   const [serverError, setServerError] = useState(false);
 
   function handleSearchSubmit(e) {
@@ -45,23 +46,10 @@ function Movies({ handlePopupOpen, width }) {
       localStorage.setItem('checkbox', e.target.shortfilm.checked);
     }
 
-    if (isChanged) {
-      setIsSearchSubmited(true);
+    if (!isChanged) {
+      return;
     }
-  }
 
-  useEffect(() => {
-    mainApi
-      .getSavedMovies()
-      .then(({ data }) => {
-        setSavedMovies(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  useEffect(() => {
     function isShortMovie(movie) {
       return movie.duration <= 40;
     }
@@ -71,9 +59,6 @@ function Movies({ handlePopupOpen, width }) {
         return isShortMovie(movie);
       }
       return true;
-    }
-    if (!isSearchSubmited) {
-      return;
     }
     const query = localStorage.getItem('query')
       ? localStorage.getItem('query')
@@ -94,27 +79,48 @@ function Movies({ handlePopupOpen, width }) {
       setFilteredMovies(filtered);
     }
 
-    if (allMovies.length !== 0) {
-      updateFilteredMovies();
-    } else {
-      setIsLoading(true);
-      moviesApi
-        .getAllMovies()
-        .then((data) => {
-          setAllMovies(data);
-          updateFilteredMovies();
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          if (err.statusCode === 500) {
-            setServerError(true);
-          }
-          console.log(err);
-        });
+    console.log('query', query);
+    if (query === '') {
+      return;
     }
-    setIsSearchSubmited(false);
-  }, [isSearchSubmited, allMovies]);
+
+    // setIsLoading(true);
+    updateFilteredMovies();
+    // setIsLoading(false);
+  }
+
+  useEffect(() => {
+    setSavedMoviesIsLoading(true);
+    mainApi
+      .getSavedMovies()
+      .then(({ data }) => {
+        setSavedMovies(data);
+        setSavedMoviesIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSavedMoviesIsLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    setAllMoviesIsLoading(true);
+    moviesApi
+      .getAllMovies()
+      .then((data) => {
+        setAllMovies(data);
+        setAllMoviesIsLoading(false);
+      })
+      .catch((err) => {
+        setAllMoviesIsLoading(false);
+        if (err.statusCode === 500) {
+          setServerError(true);
+        }
+        console.log(err);
+      });
+  }, []);
+
+  // useEffect(() => {}, [isSearchSubmited]);
 
   function handleSaveMovie(movie) {
     const movieToSave = {
@@ -184,9 +190,10 @@ function Movies({ handlePopupOpen, width }) {
         isShortMovies={checkbox}
       />
       <MoviesCardList>
-        {isLoading && <Preloader />}
-        {filteredMovies !== null &&
-          !isLoading &&
+        {isSavedMoviesLoading || isAllMoviesLoading ? (
+          <Preloader />
+        ) : (
+          filteredMovies !== null &&
           filteredMovies.slice(0, cardsNumber).map((movie) => (
             <MoviesCard
               key={movie.id}
@@ -208,8 +215,11 @@ function Movies({ handlePopupOpen, width }) {
                 </button>
               )}
             </MoviesCard>
-          ))}
-        {filteredMovies.length === 0 && !isLoading && <p>Ничего не найдено</p>}
+          ))
+        )}
+        {filteredMovies && filteredMovies.length === 0 && (
+          <p>Ничего не найдено</p>
+        )}
         {serverError && (
           <p>
             Во время запроса произошла ошибка. Возможно, проблема с соединением
@@ -217,7 +227,7 @@ function Movies({ handlePopupOpen, width }) {
           </p>
         )}
       </MoviesCardList>
-      {filteredMovies.length > cardsNumber && (
+      {filteredMovies && filteredMovies.length > cardsNumber && (
         <MoreButton saved={false} handleMoreCards={handleMoreCards} />
       )}
       <Footer />
