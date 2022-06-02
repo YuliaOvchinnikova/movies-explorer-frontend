@@ -3,17 +3,38 @@ import useFormWithValidation from '../../utils/useFormWithValidation.js';
 import Header from '../common/Header/Header.js';
 import './Profile.css';
 import { UserContext } from '../../utils/userContext.js';
+import mainApi from '../../utils/MainApi.js';
 
-function Profile({ handlePopupOpen, width, profileSubmit }) {
-  const currentUser = React.useContext(UserContext);
+function Profile({ handlePopupOpen, width }) {
+  const { currentUser, setCurrentUser } = React.useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
 
   const [values, handleChange, errors, isValid, resetForm] =
     useFormWithValidation();
 
+  const [submittedDataIsValid, setSubmittedDataIsValid] = useState(true);
+
+  function changeUserInfo({ name, email }) {
+    mainApi
+      .changeUserInfo(name, email)
+      .then(({ data }) => {
+        setCurrentUser(data);
+        setIsEditing(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSubmittedDataIsValid(false);
+      });
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
-    profileSubmit(values);
+    changeUserInfo({ ...currentUser, ...values });
+  }
+
+  function handleFormChange(e) {
+    setSubmittedDataIsValid(true);
+    handleChange(e);
   }
 
   return (
@@ -31,61 +52,73 @@ function Profile({ handlePopupOpen, width, profileSubmit }) {
               Имя
             </label>
             <input
-              className="profile-section__input interactive-element"
+              className={
+                !isEditing
+                  ? 'profile-section__input profile-section__input_disable'
+                  : 'profile-section__input'
+              }
               name="name"
               type="text"
               placeholder="Name"
               value={values.name ? values.name : currentUser.name}
-              onChange={handleChange}
+              onChange={handleFormChange}
               required
-              max-length="3"
-              min-length="15"
+              min-length="3"
+              max-length="15"
               disabled={!isEditing}
             />
-            {errors?.name && (
-              <span className="profile-section__input-error">
-                {errors.name}
-              </span>
-            )}
           </div>
+          {errors?.name && (
+            <span className="profile-section__input-error">{errors.name}</span>
+          )}
           <div className="profile-section__cover">
             <label className="profile-section__label" htmlFor="email">
               E-mail
             </label>
             <input
-              className="profile-section__input interactive-element"
+              className={
+                !isEditing
+                  ? 'profile-section__input profile-section__input_disable'
+                  : 'profile-section__input'
+              }
               name="email"
               type="email"
               placeholder="Email"
               value={values.email ? values.email : currentUser.email}
-              onChange={handleChange}
+              onChange={handleFormChange}
               required
-              max-length="5"
-              min-length="30"
+              min-length="5"
+              max-length="30"
               disabled={!isEditing}
             />
-            {errors?.email && (
-              <span className="profile-section__input-error">
-                {errors.email}
-              </span>
-            )}
           </div>
+          {errors?.email && (
+            <span className="profile-section__input-error">{errors.email}</span>
+          )}
+          {!submittedDataIsValid && (
+            <p className="profile-section__error">
+              При обновлении профиля произошла ошибка.
+            </p>
+          )}
+
           {isEditing && (
             <button
-              className="profile-section__save-button interactive-element interactive-element"
-              disabled={!isValid}
+              className={
+                !isValid || !submittedDataIsValid
+                  ? 'profile-section__save-button profile-section__save-button_disable'
+                  : 'profile-section__save-button interactive-element'
+              }
+              disabled={!isValid || !submittedDataIsValid}
+              type="submit"
             >
               Сохранить
             </button>
           )}
         </form>
+
         {!isEditing && (
           <button
-            className={
-              isValid
-                ? 'profile-section__edit-button interactive-element'
-                : 'profile-section__edit-button profile-section__edit-button_disable'
-            }
+            className="profile-section__edit-button profile-section__edit-button_disable"
             type="button"
             onClick={() => setIsEditing(true)}
           >
@@ -93,11 +126,6 @@ function Profile({ handlePopupOpen, width, profileSubmit }) {
           </button>
         )}
         <button className="profile-section__logout-button interactive-element">
-          Выйти из аккаунта
-        </button>
-
-        <p className="profile-section__error">Текст ошибки</p>
-        <button className="profile-section__save-button profile-section__save-button_disable interactive-element">
           Выйти из аккаунта
         </button>
       </section>

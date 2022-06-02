@@ -83,7 +83,7 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  changeUserInfo(name, about) {
+  changeUserInfo(name, email) {
     return fetch(`${this._address}/users/me`, {
       method: 'PATCH',
       headers: {
@@ -91,8 +91,8 @@ class MainApi {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: name,
-        about: about,
+        name,
+        email,
       }),
       credentials: 'include',
     }).then(this._checkResponse);

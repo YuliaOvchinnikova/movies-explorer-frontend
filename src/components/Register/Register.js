@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../components/common/Logo/Logo.js';
 import useFormWithValidation from '../../utils/useFormWithValidation.js';
@@ -10,7 +10,6 @@ function Register({ registrationSubmit }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-
     registrationSubmit(values);
   }
 
@@ -36,6 +35,9 @@ function Register({ registrationSubmit }) {
             max-length="3"
             min-length="15"
           />
+          {errors?.name && (
+            <span className="register-section__input-error">{errors.name}</span>
+          )}
           <label className="register-section__label" htmlFor="email">
             E-mail
           </label>
@@ -50,6 +52,11 @@ function Register({ registrationSubmit }) {
             max-length="5"
             min-length="30"
           />
+          {errors?.email && (
+            <span className="register-section__input-error">
+              {errors.email}
+            </span>
+          )}
           <label className="register-section__label" htmlFor="password">
             Пароль
           </label>
@@ -61,15 +68,21 @@ function Register({ registrationSubmit }) {
             value={values.password ? values.password : ''}
             onChange={handleChange}
             required
-            max-length="4"
+            min-length="4"
           />
-          {/* <span className="popup__input-error about-input-error">
-            Что-то пошло не так...
-          </span> */}
+          {errors?.password && (
+            <span className="register-section__input-error">
+              {errors.password}
+            </span>
+          )}
           <button
-            className="register-section__submit-button interactive-element"
+            className={
+              isValid
+                ? 'register-section__submit-button interactive-element'
+                : 'register-section__submit-button register-section__submit-button_disable'
+            }
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid ? true : false}
           >
             Зарегистироваться
           </button>

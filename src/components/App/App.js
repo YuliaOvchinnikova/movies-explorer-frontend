@@ -73,22 +73,11 @@ function App() {
       });
   }
 
-  function profileSubmit({ name, email }) {
-    // mainApi
-    //   .changeUserInfo(name, email)
-    //   .then((user) => {
-    //     setCurrentUser(user);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  }
-
   if (userInfoLoading) {
     return <div></div>;
   }
 
-  console.log(userAuthorized);
+  // console.log(userAuthorized);
   return (
     <>
       <Routes>
@@ -112,12 +101,8 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute authorized={userAuthorized}>
-              <UserContext.Provider value={currentUser}>
-                <Profile
-                  handlePopupOpen={handlePopupOpen}
-                  width={width}
-                  profileSubmit={profileSubmit}
-                />
+              <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+                <Profile handlePopupOpen={handlePopupOpen} width={width} />
               </UserContext.Provider>
             </ProtectedRoute>
           }

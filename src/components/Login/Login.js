@@ -1,24 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../components/common/Logo/Logo.js';
+import useFormWithValidation from '../../utils/useFormWithValidation.js';
 import './Login.css';
 
 function Login({ loginSubmit }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  function handleChangeEmail(e) {
-    setEmail(e.target.value);
-  }
-
-  function handleChangePassword(e) {
-    setPassword(e.target.value);
-  }
+  const [values, handleChange, errors, isValid, resetForm] =
+    useFormWithValidation();
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    loginSubmit(email, password);
+    loginSubmit(values);
   }
 
   return (
@@ -37,12 +29,15 @@ function Login({ loginSubmit }) {
             name="email"
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={handleChangeEmail}
+            value={values.email ? values.email : ''}
+            onChange={handleChange}
             required
             max-length="5"
             min-length="30"
           />
+          {errors?.email && (
+            <span className="login-section__input-error">{errors.email}</span>
+          )}
           <label className="login-section__label" htmlFor="password">
             Пароль
           </label>
@@ -51,14 +46,24 @@ function Login({ loginSubmit }) {
             name="password"
             type="password"
             placeholder="Пароль"
-            value={password}
-            onChange={handleChangePassword}
+            value={values.password ? values.password : ''}
+            onChange={handleChange}
             required
-            max-length="4"
+            min-length="4"
           />
+          {errors?.password && (
+            <span className="login-section__input-error">
+              {errors.password}
+            </span>
+          )}
           <button
-            className="login-section__submit-button interactive-element"
+            className={
+              isValid
+                ? 'login-section__submit-button interactive-element'
+                : 'login-section__submit-button login-section__submit-button_disable'
+            }
             type="submit"
+            disabled={!isValid ? true : false}
           >
             Войти
           </button>

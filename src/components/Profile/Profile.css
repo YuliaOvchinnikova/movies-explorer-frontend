@@ -26,10 +26,11 @@
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #E8E8E8;
-  margin-bottom: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 6px;
 }
 
-.profile-section__cover:last-child {
+.profile-section__cover:last-of-type {
   border-bottom: none;
   margin-top: 17px;
 }
@@ -47,6 +48,24 @@
   font-size: 11px;
   line-height: 1.2;
   text-align: right;
+  cursor: auto;
+}
+
+.profile-section__input:focus {
+  outline: none;
+}
+
+.profile-section__input_disable {
+  cursor: unset;
+}
+
+.profile-section__input-error {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 1.2;
+  color: #EE3465;
+  margin-bottom: 10px;
+  text-align: right;
 }
 
 .profile-section__edit-button {
@@ -58,6 +77,10 @@
   border: none;
   margin: 220px 0 0;
   padding: 0;
+}
+
+.profile-section__edit-button_disable {
+  cursor: unset;
 }
 
 .profile-section__logout-button {
