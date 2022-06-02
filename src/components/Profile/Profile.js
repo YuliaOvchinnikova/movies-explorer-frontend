@@ -4,10 +4,13 @@ import Header from '../common/Header/Header.js';
 import './Profile.css';
 import { UserContext } from '../../utils/userContext.js';
 import mainApi from '../../utils/MainApi.js';
+import { useNavigate } from 'react-router-dom';
 
 function Profile({ handlePopupOpen, width }) {
-  const { currentUser, setCurrentUser } = React.useContext(UserContext);
+  const { currentUser, setCurrentUser, setUserAuthorized } =
+    React.useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
 
   const [values, handleChange, errors, isValid, resetForm] =
     useFormWithValidation();
@@ -24,6 +27,26 @@ function Profile({ handlePopupOpen, width }) {
       .catch((err) => {
         console.log(err);
         setSubmittedDataIsValid(false);
+      });
+  }
+
+  function onLogout() {
+    mainApi
+      .signout()
+      .then(() => {
+        localStorage.removeItem('query');
+        localStorage.removeItem('checkbox');
+        localStorage.removeItem('savedMovies');
+        setUserAuthorized(false);
+        navigate('/');
+      })
+      .catch((err) => {
+        localStorage.removeItem('query');
+        localStorage.removeItem('checkbox');
+        localStorage.removeItem('savedMovies');
+        setUserAuthorized(false);
+        navigate('/');
+        console.log(err);
       });
   }
 
@@ -125,7 +148,10 @@ function Profile({ handlePopupOpen, width }) {
             Редактировать
           </button>
         )}
-        <button className="profile-section__logout-button interactive-element">
+        <button
+          className="profile-section__logout-button interactive-element"
+          onClick={onLogout}
+        >
           Выйти из аккаунта
         </button>
       </section>

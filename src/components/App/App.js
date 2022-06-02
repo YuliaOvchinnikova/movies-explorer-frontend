@@ -99,7 +99,9 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute authorized={userAuthorized}>
-              <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+              <UserContext.Provider
+                value={{ currentUser, setCurrentUser, setUserAuthorized }}
+              >
                 <Profile handlePopupOpen={handlePopupOpen} width={width} />
               </UserContext.Provider>
             </ProtectedRoute>

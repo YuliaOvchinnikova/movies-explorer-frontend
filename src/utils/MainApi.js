@@ -1,7 +1,6 @@
 class MainApi {
-  constructor({ address, token }) {
+  constructor({ address }) {
     this._address = address;
-    this._token = token;
   }
 
   _checkResponse(res) {
@@ -16,10 +15,8 @@ class MainApi {
   }
 
   getSavedMovies() {
-    // console.log(localStorage.getItem('jwt'))
     return fetch(`${this._address}/movies`, {
       headers: {
-        authorization: this._token,
         'Content-Type': 'application/json',
       },
       credentials: 'include',
@@ -42,7 +39,6 @@ class MainApi {
     return fetch(`${this._address}/movies`, {
       method: 'POST',
       headers: {
-        authorization: this._token,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -66,7 +62,6 @@ class MainApi {
     return fetch(`${this._address}/movies/${_id}`, {
       method: 'DELETE',
       headers: {
-        authorization: this._token,
         'Content-Type': 'application/json',
       },
       credentials: 'include',
@@ -76,7 +71,6 @@ class MainApi {
   getUserInfo() {
     return fetch(`${this._address}/users/me`, {
       headers: {
-        authorization: this._token,
         'Content-Type': 'application/json',
       },
       credentials: 'include',
@@ -87,7 +81,6 @@ class MainApi {
     return fetch(`${this._address}/users/me`, {
       method: 'PATCH',
       headers: {
-        authorization: this._token,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -97,12 +90,18 @@ class MainApi {
       credentials: 'include',
     }).then(this._checkResponse);
   }
+
+  signout() {
+    return fetch(`${this._address}/signout`, {
+      method: 'GET',
+      credentials: 'include',
+    }).then(this._checkResponse);
+  }
 }
 
 const config = {
   // address: 'http://api.movies-library.nomoredomains.work',
   address: 'http://localhost:3001',
-  token: '6ab3ffcb-8b7e-4953-95c8-2915e9d79fac',
 };
 
 const mainApi = new MainApi(config);
