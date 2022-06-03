@@ -32,6 +32,7 @@ function Register({ registrationSubmit }) {
             value={values.name ? values.name : ''}
             onChange={handleChange}
             required
+            // pattern="^[а-яА-ЯёЁa-zA-Z]+$ ^\s ^/-/g"
             max-length="3"
             min-length="15"
           />

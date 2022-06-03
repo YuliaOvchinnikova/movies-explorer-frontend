@@ -18,6 +18,9 @@
   line-height: 1.2;
   margin: 0;
   padding: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .card__duration {
@@ -27,6 +30,25 @@
   color: #A0A0A0;
   margin: 0;
   padding: 0;
+}
+
+.card__trailer {
+  display: block;
+  max-width: 360px;
+  min-height: 200px;
+  background-size: cover;
+  position: relative;
+}
+
+.card__trailer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.3;
+  transition: opacity 1s ease-in;
 }
 
 .card__image {
@@ -66,6 +88,11 @@
     min-height: 309px;
   }
 
+  .card__trailer {
+    max-width: 342px;
+    min-height: 190px;
+  }
+
   .card__image {
     width: 342px;
     height: 190px;
@@ -90,6 +117,11 @@
   .card__duration {
     font-size: 10px;
     line-height: 1.8;
+  }
+
+  .card__trailer {
+    max-width: 300px;
+    min-height: 168px;
   }
 
   .card__image {

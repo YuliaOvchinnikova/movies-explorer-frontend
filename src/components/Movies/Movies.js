@@ -26,68 +26,80 @@ function Movies({ handlePopupOpen, width }) {
 
   const [allMovies, setAllMovies] = useState([]);
   const [isAllMoviesLoading, setAllMoviesIsLoading] = useState(false);
+  const [searchSubmitted, setSearchSubmitted] = useState(false);
 
   const [savedMovies, setSavedMovies] = useState([]);
   const [isSavedMoviesLoading, setSavedMoviesIsLoading] = useState(false);
 
   const [serverError, setServerError] = useState(false);
 
+  function updateFilteredMovies(movies, queryString, isShortMovies) {
+    queryString = queryString.toLowerCase();
+    const filtered = movies.filter(
+      (movie) =>
+        movie.nameRU.toLowerCase().includes(queryString) &&
+        (isShortMovies ? movie.duration <= 40 : true)
+    );
+    localStorage.setItem('filteredMovies', JSON.stringify(filtered));
+    setFilteredMovies(filtered);
+  }
+
   function handleSearchSubmit(e) {
     e.preventDefault();
     let isChanged = false;
 
-    if (storedQuery !== e.target.search.value) {
+    let newQuery = query;
+    let newCheckbox = checkbox;
+
+    if (query !== e.target.search.value) {
       isChanged = true;
+      setQuery(e.target.search.value);
       localStorage.setItem('query', e.target.search.value);
+      newQuery = e.target.search.value;
     }
 
-    if (storedcheckbox !== e.target.shortfilm.checked) {
+    if (checkbox !== e.target.shortfilm.checked) {
       isChanged = true;
+      setCheckbox(e.target.shortfilm.checked);
       localStorage.setItem('checkbox', e.target.shortfilm.checked);
+      newCheckbox = e.target.shortfilm.checked;
     }
 
     if (!isChanged) {
       return;
     }
 
-    function isShortMovie(movie) {
-      return movie.duration <= 40;
-    }
-
-    function filteredByCheckbox(movie, checkbox) {
-      if (checkbox) {
-        return isShortMovie(movie);
-      }
-      return true;
-    }
-    const query = localStorage.getItem('query')
-      ? localStorage.getItem('query')
-      : '';
-    const checkbox = localStorage.getItem('checkbox')
-      ? JSON.parse(localStorage.getItem('checkbox'))
-      : false;
-
-    function updateFilteredMovies() {
-      const filtered = allMovies.filter(
-        (movie) =>
-          movie.nameRU.includes(query) && filteredByCheckbox(movie, checkbox)
-      );
-      localStorage.setItem('filteredMovies', JSON.stringify(filtered));
-      setQuery(query);
-      setCheckbox(checkbox);
-
-      setFilteredMovies(filtered);
-    }
-
-    console.log('query', query);
-    if (query === '') {
+    if (allMovies.length === 0) {
+      setSearchSubmitted(true);
       return;
     }
 
-    // setIsLoading(true);
-    updateFilteredMovies();
-    // setIsLoading(false);
+    updateFilteredMovies(allMovies, newQuery, newCheckbox);
   }
+
+  useEffect(() => {
+    if (!searchSubmitted || allMovies.length !== 0) {
+      return;
+    }
+    setSearchSubmitted(false);
+
+    setAllMoviesIsLoading(true);
+    moviesApi
+      .getAllMovies()
+      .then((data) => {
+        setAllMovies(data);
+        updateFilteredMovies(data, query, checkbox);
+      })
+      .catch((err) => {
+        if (err.statusCode === 500) {
+          setServerError(true);
+        }
+        console.log(err);
+      })
+      .finally(() => {
+        setAllMoviesIsLoading(false);
+      });
+  }, [searchSubmitted, allMovies, query, checkbox]);
 
   useEffect(() => {
     setSavedMoviesIsLoading(true);
@@ -102,25 +114,6 @@ function Movies({ handlePopupOpen, width }) {
         setSavedMoviesIsLoading(false);
       });
   }, []);
-
-  useEffect(() => {
-    setAllMoviesIsLoading(true);
-    moviesApi
-      .getAllMovies()
-      .then((data) => {
-        setAllMovies(data);
-        setAllMoviesIsLoading(false);
-      })
-      .catch((err) => {
-        setAllMoviesIsLoading(false);
-        if (err.statusCode === 500) {
-          setServerError(true);
-        }
-        console.log(err);
-      });
-  }, []);
-
-  // useEffect(() => {}, [isSearchSubmited]);
 
   function handleSaveMovie(movie) {
     const movieToSave = {
@@ -200,6 +193,7 @@ function Movies({ handlePopupOpen, width }) {
               title={movie.nameRU}
               duration={movie.duration}
               image={`https://api.nomoreparties.co/${movie.image.url}`}
+              trailerLink={movie.trailerLink}
             >
               {isMovieSaved(movie.id) ? (
                 <button
