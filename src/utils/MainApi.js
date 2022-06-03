@@ -100,8 +100,7 @@ class MainApi {
 }
 
 const config = {
-  // address: 'http://api.movies-library.nomoredomains.work',
-  address: 'http://localhost:3001',
+  address: 'http://api.movies-library.nomoredomains.work',
 };
 
 const mainApi = new MainApi(config);
