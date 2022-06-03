@@ -217,18 +217,20 @@ function Movies({ handlePopupOpen, width }) {
             </MoviesCard>
           ))
         )}
-        {filteredMovies && filteredMovies.length === 0 && (
-          <p>Ничего не найдено</p>
-        )}
-        {serverError && (
-          <p>
-            Во время запроса произошла ошибка. Возможно, проблема с соединением
-            или сервер недоступен. Подождите немного и попробуйте ещё раз
-          </p>
-        )}
       </MoviesCardList>
-      {filteredMovies && filteredMovies.length > cardsNumber && (
+      {filteredMovies && filteredMovies.length === 0 && (
+        <p className="movies__no-results">Ничего не найдено</p>
+      )}
+      {serverError && (
+        <p className="movies__no-results">
+          Во время запроса произошла ошибка. Возможно, проблема с соединением
+          или сервер недоступен. Подождите немного и попробуйте ещё раз
+        </p>
+      )}
+      {filteredMovies && filteredMovies.length > cardsNumber ? (
         <MoreButton saved={false} handleMoreCards={handleMoreCards} />
+      ) : (
+        <div className="empty-block"></div>
       )}
       <Footer />
     </main>

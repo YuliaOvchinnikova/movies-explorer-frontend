@@ -59,6 +59,7 @@ function SavedMovies({ handlePopupOpen, width }) {
           </MoviesCard>
         ))}
       </MoviesCardList>
+      <div className="empty-block"></div>
       <Footer />
     </main>
   );

@@ -140,20 +140,22 @@ function Profile({ handlePopupOpen, width }) {
         </form>
 
         {!isEditing && (
-          <button
-            className="profile-section__edit-button profile-section__edit-button_disable"
-            type="button"
-            onClick={() => setIsEditing(true)}
-          >
-            Редактировать
-          </button>
+          <>
+            <button
+              className="profile-section__edit-button interactive-element"
+              type="button"
+              onClick={() => setIsEditing(true)}
+            >
+              Редактировать
+            </button>
+            <button
+              className="profile-section__logout-button interactive-element"
+              onClick={onLogout}
+            >
+              Выйти из аккаунта
+            </button>
+          </>
         )}
-        <button
-          className="profile-section__logout-button interactive-element"
-          onClick={onLogout}
-        >
-          Выйти из аккаунта
-        </button>
       </section>
     </main>
   );
