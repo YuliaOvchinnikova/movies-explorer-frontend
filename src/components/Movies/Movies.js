@@ -44,37 +44,20 @@ function Movies({ handlePopupOpen, width }) {
     setFilteredMovies(filtered);
   }
 
-  function handleSearchSubmit(e) {
-    e.preventDefault();
-    let isChanged = false;
-
-    let newQuery = query;
-    let newCheckbox = checkbox;
-
-    if (query !== e.target.search.value) {
-      isChanged = true;
-      setQuery(e.target.search.value);
-      localStorage.setItem('query', e.target.search.value);
-      newQuery = e.target.search.value;
-    }
-
-    if (checkbox !== e.target.shortfilm.checked) {
-      isChanged = true;
-      setCheckbox(e.target.shortfilm.checked);
-      localStorage.setItem('checkbox', e.target.shortfilm.checked);
-      newCheckbox = e.target.shortfilm.checked;
-    }
-
-    if (!isChanged) {
+  function handleSearchSubmit(newQuery) {
+    if (query === newQuery) {
       return;
     }
+
+    setQuery(newQuery);
+    localStorage.setItem('query', newQuery);
 
     if (allMovies.length === 0) {
       setSearchSubmitted(true);
       return;
     }
 
-    updateFilteredMovies(allMovies, newQuery, newCheckbox);
+    updateFilteredMovies(allMovies, newQuery, checkbox);
   }
 
   useEffect(() => {
@@ -170,6 +153,12 @@ function Movies({ handlePopupOpen, width }) {
     return savedMovies.some((movie) => movie.movieId === id);
   }
 
+  function handleShortFilms(checkbox) {
+    setCheckbox(checkbox);
+    localStorage.setItem('checkbox', checkbox);
+    updateFilteredMovies(allMovies, query, checkbox);
+  }
+
   return (
     <main className="page">
       <Header
@@ -181,6 +170,8 @@ function Movies({ handlePopupOpen, width }) {
         handleSearchSubmit={handleSearchSubmit}
         query={query}
         isShortMovies={checkbox}
+        handleShortFilms={handleShortFilms}
+        requiredInput={true}
       />
       <MoviesCardList>
         {isSavedMoviesLoading || isAllMoviesLoading ? (

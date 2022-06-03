@@ -7,6 +7,7 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile.js';
 import Login from '../Login/Login.js';
 import Register from '../Register/Register.js';
+import Error from '../Error/Error.js';
 import Popup from '../common/Popup/Popup.js';
 import { register, login } from '../../utils/Auth.js';
 import mainApi from '../../utils/MainApi.js';
@@ -123,16 +124,7 @@ function App() {
           path="/signup"
           element={<Register registrationSubmit={registrationSubmit} />}
         />
-        <Route
-          path="*"
-          element={
-            userAuthorized ? (
-              <Navigate to="/" replace />
-            ) : (
-              <Navigate to="/signin" replace />
-            )
-          }
-        />
+        <Route path="*" element={<Error></Error>} />
       </Routes>
       {isPopupOpen && width < 1024 && (
         <Popup handlePopupClose={handlePopupClose} />

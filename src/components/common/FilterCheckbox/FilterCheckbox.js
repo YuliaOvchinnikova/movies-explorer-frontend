@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import './FilterCheckbox.css';
 
-export default function FilterCheckbox({ isShortMovies }) {
-  const [checkbox, setCheckbox] = useState(isShortMovies);
-
+export default function FilterCheckbox({ isShortMovies, handleShortFilms }) {
   function handleCheckboxClick() {
-    setCheckbox(!checkbox);
+    handleShortFilms(!isShortMovies);
   }
 
   return (
@@ -21,7 +19,7 @@ export default function FilterCheckbox({ isShortMovies }) {
       <label
         htmlFor="shortfilm"
         className={`${
-          checkbox
+          isShortMovies
             ? 'checkbox-container__image'
             : 'checkbox-container__image checkbox-container__image-inactive'
         }`}

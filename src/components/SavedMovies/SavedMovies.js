@@ -10,6 +10,9 @@ import './SavedMovies.css';
 
 function SavedMovies({ handlePopupOpen, width }) {
   const [savedMovies, setSavedMovies] = useState([]);
+  const [shortFilms, setShortFilms] = useState(false);
+  const [query, setQuery] = useState('');
+
   useEffect(() => {
     mainApi
       .getSavedMovies()
@@ -33,6 +36,17 @@ function SavedMovies({ handlePopupOpen, width }) {
       });
   }
 
+  function handleSearchSubmit(newQuery) {
+    if (query === newQuery) {
+      return;
+    }
+    setQuery(newQuery.toLowerCase());
+  }
+
+  function handleShortFilms(checkbox) {
+    setShortFilms(checkbox);
+  }
+
   return (
     <main className="page">
       <Header
@@ -40,24 +54,36 @@ function SavedMovies({ handlePopupOpen, width }) {
         handlePopupOpen={handlePopupOpen}
         width={width}
       />
-      <SearchForm />
+      <SearchForm
+        handleSearchSubmit={handleSearchSubmit}
+        query={query}
+        isShortMovies={shortFilms}
+        handleShortFilms={handleShortFilms}
+        requiredInput={false}
+      />
       <MoviesCardList>
-        {savedMovies.map((savedMovie) => (
-          <MoviesCard
-            key={savedMovie._id}
-            title={savedMovie.nameRU}
-            duration={savedMovie.duration}
-            image={savedMovie.image}
-          >
-            <button
-              className="card__button card__button_saved interactive-element"
-              type="button"
-              onClick={() => handleDeleteSavedMovie(savedMovie._id)}
+        {savedMovies
+          .filter(
+            (movie) =>
+              movie.nameRU.toLowerCase().includes(query) &&
+              (shortFilms ? movie.duration <= 40 : true)
+          )
+          .map((savedMovie) => (
+            <MoviesCard
+              key={savedMovie._id}
+              title={savedMovie.nameRU}
+              duration={savedMovie.duration}
+              image={savedMovie.image}
             >
-              saved
-            </button>
-          </MoviesCard>
-        ))}
+              <button
+                className="card__button card__button_saved interactive-element"
+                type="button"
+                onClick={() => handleDeleteSavedMovie(savedMovie._id)}
+              >
+                saved
+              </button>
+            </MoviesCard>
+          ))}
       </MoviesCardList>
       <div className="empty-block"></div>
       <Footer />
