@@ -86,6 +86,7 @@ function Profile({ handlePopupOpen, width }) {
               value={values.name ? values.name : currentUser.name}
               onChange={handleFormChange}
               required
+              pattern="^[а-яА-ЯёЁa-zA-Z\s\-]+$"
               min-length="3"
               max-length="15"
               disabled={!isEditing}

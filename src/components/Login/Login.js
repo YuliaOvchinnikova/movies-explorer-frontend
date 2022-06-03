@@ -32,8 +32,8 @@ function Login({ loginSubmit }) {
             value={values.email ? values.email : ''}
             onChange={handleChange}
             required
-            max-length="5"
-            min-length="30"
+            min-length="5"
+            max-length="30"
           />
           {errors?.email && (
             <span className="login-section__input-error">{errors.email}</span>

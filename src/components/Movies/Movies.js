@@ -29,7 +29,6 @@ function Movies({ handlePopupOpen, width }) {
   const [searchSubmitted, setSearchSubmitted] = useState(false);
 
   const [savedMovies, setSavedMovies] = useState([]);
-  const [isSavedMoviesLoading, setSavedMoviesIsLoading] = useState(false);
 
   const [serverError, setServerError] = useState(false);
 
@@ -85,16 +84,13 @@ function Movies({ handlePopupOpen, width }) {
   }, [searchSubmitted, allMovies, query, checkbox]);
 
   useEffect(() => {
-    setSavedMoviesIsLoading(true);
     mainApi
       .getSavedMovies()
       .then(({ data }) => {
         setSavedMovies(data);
-        setSavedMoviesIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setSavedMoviesIsLoading(false);
       });
   }, []);
 
@@ -174,7 +170,7 @@ function Movies({ handlePopupOpen, width }) {
         requiredInput={true}
       />
       <MoviesCardList>
-        {isSavedMoviesLoading || isAllMoviesLoading ? (
+        {isAllMoviesLoading ? (
           <Preloader />
         ) : (
           filteredMovies !== null &&

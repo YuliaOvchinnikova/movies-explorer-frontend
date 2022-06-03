@@ -32,9 +32,9 @@ function Register({ registrationSubmit }) {
             value={values.name ? values.name : ''}
             onChange={handleChange}
             required
-            // pattern="^[а-яА-ЯёЁa-zA-Z]+$ ^\s ^/-/g"
-            max-length="3"
-            min-length="15"
+            pattern="^[а-яА-ЯёЁa-zA-Z\s\-]+$"
+            min-length="3"
+            max-length="15"
           />
           {errors?.name && (
             <span className="register-section__input-error">{errors.name}</span>
