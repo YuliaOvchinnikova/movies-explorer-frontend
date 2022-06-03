@@ -44,10 +44,6 @@ function Movies({ handlePopupOpen, width }) {
   }
 
   function handleSearchSubmit(newQuery) {
-    if (query === newQuery) {
-      return;
-    }
-
     setQuery(newQuery);
     localStorage.setItem('query', newQuery);
 
@@ -149,10 +145,10 @@ function Movies({ handlePopupOpen, width }) {
     return savedMovies.some((movie) => movie.movieId === id);
   }
 
-  function handleShortFilms(checkbox) {
-    setCheckbox(checkbox);
-    localStorage.setItem('checkbox', checkbox);
-    updateFilteredMovies(allMovies, query, checkbox);
+  function handleShortFilms(newCheckbox) {
+    setCheckbox(newCheckbox);
+    localStorage.setItem('checkbox', newCheckbox);
+    updateFilteredMovies(allMovies, query, newCheckbox);
   }
 
   return (
