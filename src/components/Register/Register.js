@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../components/common/Logo/Logo.js';
 import useFormWithValidation from '../../utils/useFormWithValidation.js';
+import { register } from '../../utils/Auth.js';
+
 import './Register.css';
 
-function Register({ registrationSubmit, error }) {
+function Register({ registrationSuccess }) {
+  const [serverError, setServerError] = useState('');
+
   const [values, handleChange, errors, isValid, resetForm] =
     useFormWithValidation({ name: '', email: '', password: '' });
+
+  function registrationSubmit({ name, email, password }) {
+    setServerError('');
+    register(name, email, password)
+      .then(() => registrationSuccess())
+      .catch((err) => {
+        setServerError(err.message);
+        console.log(err);
+      });
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
     registrationSubmit(values);
+  }
+
+  function handleFormChange(e) {
+    setServerError('');
+    handleChange(e);
   }
 
   return (
@@ -28,9 +47,9 @@ function Register({ registrationSubmit, error }) {
             className="register-section__input interactive-element"
             name="name"
             type="text"
-            placeholder="Name"
+            placeholder="Имя"
             value={values.name ? values.name : ''}
-            onChange={handleChange}
+            onChange={handleFormChange}
             required
             pattern="^[а-яА-ЯёЁa-zA-Z\s\-]+$"
             min-length="3"
@@ -40,7 +59,7 @@ function Register({ registrationSubmit, error }) {
             <span className="register-section__input-error">{errors.name}</span>
           )}
           <label className="register-section__label" htmlFor="email">
-            E-mail
+            Email
           </label>
           <input
             className="register-section__input interactive-element"
@@ -48,7 +67,7 @@ function Register({ registrationSubmit, error }) {
             type="email"
             placeholder="Email"
             value={values.email ? values.email : ''}
-            onChange={handleChange}
+            onChange={handleFormChange}
             required
             max-length="5"
             min-length="30"
@@ -67,7 +86,7 @@ function Register({ registrationSubmit, error }) {
             type="password"
             placeholder="Пароль"
             value={values.password ? values.password : ''}
-            onChange={handleChange}
+            onChange={handleFormChange}
             required
             min-length="4"
           />
@@ -76,7 +95,9 @@ function Register({ registrationSubmit, error }) {
               {errors.password}
             </span>
           )}
-          {error !== '' && <p>{error}</p>}
+          {serverError !== '' && (
+            <p className="register-section__input-error">{serverError}</p>
+          )}
           <button
             className={
               isValid

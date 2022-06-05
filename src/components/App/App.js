@@ -9,7 +9,6 @@ import Login from '../Login/Login.js';
 import Register from '../Register/Register.js';
 import Error from '../Error/Error.js';
 import Popup from '../common/Popup/Popup.js';
-import { register, login } from '../../utils/Auth.js';
 import mainApi from '../../utils/MainApi.js';
 import useWindowSize from '../../utils/useWindowSize.js';
 import ProtectedRoute from '../ProtectedRoute.js';
@@ -25,8 +24,6 @@ function App() {
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState();
-
-  const [serverError, setServerError] = useState('');
 
   useEffect(() => {
     mainApi
@@ -55,30 +52,14 @@ function App() {
     setIsPopupOpen(false);
   }
 
-  function registrationSubmit({ name, email, password }) {
-    setServerError('');
-    register(name, email, password)
-      .then(() => {
-        setUserAuthorized(true);
-        navigate('/movies');
-      })
-      .catch((err) => {
-        setServerError(err.message);
-        console.log(err);
-      });
+  function registrationSuccess() {
+    setUserAuthorized(true);
+    navigate('/movies');
   }
 
-  function loginSubmit({ email, password }) {
-    setServerError('');
-    login(email, password)
-      .then(() => {
-        setUserAuthorized(true);
-        navigate('/movies');
-      })
-      .catch((err) => {
-        setServerError(err.message);
-        console.log(err);
-      });
+  function loginSuccess() {
+    setUserAuthorized(true);
+    navigate('/movies');
   }
 
   if (userInfoLoading) {
@@ -155,7 +136,7 @@ function App() {
             userAuthorized ? (
               <Navigate to="/" />
             ) : (
-              <Login loginSubmit={loginSubmit} error={serverError} />
+              <Login loginSuccess={loginSuccess} />
             )
           }
         />
@@ -165,10 +146,7 @@ function App() {
             userAuthorized ? (
               <Navigate to="/" />
             ) : (
-              <Register
-                registrationSubmit={registrationSubmit}
-                error={serverError}
-              />
+              <Register registrationSuccess={registrationSuccess} />
             )
           }
         />

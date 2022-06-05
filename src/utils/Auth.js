@@ -28,6 +28,7 @@ export const register = (name, email, password) => {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify({ name, email, password }),
   }).then(checkResponse);
 };

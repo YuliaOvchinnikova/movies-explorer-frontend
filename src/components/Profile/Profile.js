@@ -11,6 +11,7 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
+  console.log(currentUser);
   const [values, handleChange, errors, isValid, resetForm, isChanged] =
     useFormWithValidation(currentUser);
 
@@ -120,52 +121,37 @@ function Profile() {
             </p>
           )}
 
-          {
-            isEditing &&
-              (!isValid || serverError !== '' || !isChanged ? (
-                <>
-                  <button
-                    className="profile-section__save-button profile-section__save-button_disable"
-                    disabled={true}
-                    type="submit"
-                  >
-                    Сохранить
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      resetForm();
-                      setServerError('');
-                      setIsEditing(false);
-                    }}
-                    className="profile-section__back-button interactive-element"
-                  >
-                    Назад
-                  </button>
-                </>
-              ) : (
+          {isEditing &&
+            (!isValid || serverError !== '' || !isChanged ? (
+              <>
                 <button
-                  className="profile-section__save-button interactive-element"
-                  disabled={false}
+                  className="profile-section__save-button profile-section__save-button_disable"
+                  disabled={true}
                   type="submit"
                 >
                   Сохранить
                 </button>
-              ))
-
-            // <button
-            //   className={
-            //     !isValid || serverError !== '' || !isChanged
-            //       ? 'profile-section__save-button profile-section__save-button_disable'
-            //       : 'profile-section__save-button interactive-element'
-            //   }
-            //   disabled={!isValid || serverError !== '' || !isChanged}
-            //   type="submit"
-            // >
-            //   Сохранить
-            // </button>
-            // {}
-          }
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetForm();
+                    setServerError('');
+                    setIsEditing(false);
+                  }}
+                  className="profile-section__back-button interactive-element"
+                >
+                  Назад
+                </button>
+              </>
+            ) : (
+              <button
+                className="profile-section__save-button interactive-element"
+                disabled={false}
+                type="submit"
+              >
+                Сохранить
+              </button>
+            ))}
         </form>
 
         {!isEditing && (

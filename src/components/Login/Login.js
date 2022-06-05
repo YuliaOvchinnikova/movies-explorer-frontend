@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../components/common/Logo/Logo.js';
 import useFormWithValidation from '../../utils/useFormWithValidation.js';
 import './Login.css';
+import { login } from '../../utils/Auth.js';
 
-function Login({ loginSubmit, error }) {
+function Login({ loginSuccess }) {
+  const [serverError, setServerError] = useState('');
   const [values, handleChange, errors, isValid, resetForm] =
     useFormWithValidation({ name: '', email: '', password: '' });
+
+  function loginSubmit({ email, password }) {
+    setServerError('');
+    login(email, password)
+      .then(() => loginSuccess())
+      .catch((err) => {
+        setServerError(err.message);
+        console.log(err);
+      });
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
     loginSubmit(values);
+  }
+
+  function handleFormChange(e) {
+    setServerError('');
+    handleChange(e);
   }
 
   return (
@@ -31,7 +48,7 @@ function Login({ loginSubmit, error }) {
             pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA_Z]{2,63}$"
             placeholder="Email"
             value={values.email ? values.email : ''}
-            onChange={handleChange}
+            onChange={handleFormChange}
             required
             min-length="5"
             max-length="30"
@@ -48,7 +65,7 @@ function Login({ loginSubmit, error }) {
             type="password"
             placeholder="Пароль"
             value={values.password ? values.password : ''}
-            onChange={handleChange}
+            onChange={handleFormChange}
             required
             min-length="4"
           />
@@ -57,7 +74,9 @@ function Login({ loginSubmit, error }) {
               {errors.password}
             </span>
           )}
-          {error !== '' && <p>{error}</p>}
+          {serverError !== '' && (
+            <p className="login-section__input-error">{serverError}</p>
+          )}
           <button
             className={
               isValid
