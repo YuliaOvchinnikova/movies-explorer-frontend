@@ -1,0 +1,29 @@
+.header {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  /* max-width: calc(100% - 70px*2); */
+  padding: 0 70px;
+  max-width: 100%;
+  min-height: 74px;
+}
+
+.header_background-dark {
+  background-color: #5C5C5C;
+}
+
+.header_background-white {
+  background-color: #fff;
+}
+
+@media screen and (max-width: 1023px) {
+  .header {
+    max-width: calc(100% - 30px*2);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .header {
+    max-width: calc(100% - 14px*2);
+  }
+}

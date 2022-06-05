@@ -1,0 +1,192 @@
+.aboutProject-section {
+  max-width: calc(100% - 70px*2);
+  margin: 0 auto;
+}
+
+.aboutProject-section__bookmark {
+  margin: 0;
+  padding: 115px 0 23px;
+}
+
+.bookmark {
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.35;
+  border-bottom: 1px solid #000;
+}
+
+.table {
+  display: grid;
+  grid-gap: 31px 149px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  margin: 74px 0 112px 0;
+}
+
+/* неизвестный шрифт текста - нужно подходять по pixsel perfect */
+.table__title {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.35;
+  margin: 0;
+  padding: 0;
+}
+
+.table__subtitle {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.35;
+  margin: 0;
+  padding: 0;
+}
+
+.chart {
+  display: grid;
+  grid-gap: 0;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-areas:
+    "complete incomplete incomplete incomplete incomplete"
+    "complete-title incomplete-title incomplete-title incomplete-title incomplete-title";
+  align-items: flex-end;
+  margin: 0 0 112px;
+}
+
+.chart__title {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.35;
+  margin: 0;
+  text-align: center;
+  padding: 10px 12px;
+}
+
+.chart__title_complete {
+  grid-area: complete;
+  background-color: #2BE080;
+}
+
+.chart__title_incomplete {
+  grid-area: incomplete;
+  background-color: #F2F2F2;
+}
+
+.chart__subtitle_first {
+  grid-area: complete-title;
+}
+
+.chart__subtitle_second {
+  grid-area: incomplete-title;
+}
+
+
+.chart__subtitle {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.35;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: #A0A0A0;
+}
+
+@media screen and (max-width: 1023px) {
+  .aboutProject-section {
+    max-width: calc(100% - 50px*2);
+    margin: 0 auto;
+  }
+
+  .aboutProject-section__bookmark {
+    padding: 90px 0 23px;
+  }
+
+  .table {
+    grid-gap: 22px 30px;
+    margin: 70px 0 93px 0;
+  }
+
+  .table__subtitle {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .chart {
+    margin: 0 0 90px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+      "complete incomplete incomplete"
+      "complete-title incomplete-title incomplete-title";
+  }
+
+  .chart__title {
+    font-size: 14px;
+    padding: 9px 10px;
+  }
+
+  .chart__subtitle {
+    font-size: 14px;
+  }
+
+}
+
+@media screen and (max-width: 767px) {
+  .aboutProject-section {
+    max-width: calc(100% - 18px*2);
+  }
+
+  .aboutProject-section__bookmark {
+    padding: 70px 0 28px;
+  }
+
+  .bookmark {
+    font-size: 18px;
+  }
+
+  .table {
+    grid-gap: 31px 149px;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    margin: 60px auto;
+  }
+
+  .table__t1 {
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+
+  .table__t3 {
+    grid-row-start: 2;
+    grid-row-end: 3;
+  }
+
+  .table__t2 {
+    grid-row-start: 3;
+    grid-row-end: 4;
+  }
+
+  .table__t4 {
+    grid-row-start: 4;
+    grid-row-end: 5;
+  }
+
+  .table__title {
+    font-size: 18px;
+  }
+
+  .table__subtitle {
+    font-size: 11px;
+  }
+
+  .chart {
+    margin: 0 0 70px;
+  }
+
+  .chart__title {
+    font-size: 14px;
+    padding: 9px 10px;
+  }
+
+  .chart__subtitle {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,11 @@
+export const SHORTFILM_LENGTH = 40;
+export const MOVIES_URL = 'https://api.nomoreparties.co/';
+export const PRODUCTION_URL = 'http://api.movies-library.nomoredomains.work';
+export const ROWS_LARGE = 12;
+export const COLUMNS_LARGE = 3;
+export const ROWS_MEDIUM = 8;
+export const COLUMNS_MEDIUM = 2;
+export const ROWS_SMALL = 5;
+export const COLUMNS_SMALL = 1;
+export const LARGE_WIDTH = 1280;
+export const MEDIUM_WIDTH = 768;

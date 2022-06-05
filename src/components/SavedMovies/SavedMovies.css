@@ -1,0 +1,9 @@
+.empty-block {
+  height: 230px;
+}
+
+@media screen and (max-width: 767px) {
+  .empty-block {
+    height: 170px;
+  }
+}
