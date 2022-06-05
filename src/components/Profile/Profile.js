@@ -11,7 +11,6 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
-  console.log(currentUser);
   const [values, handleChange, errors, isValid, resetForm, isChanged] =
     useFormWithValidation(currentUser);
 
@@ -52,7 +51,6 @@ function Profile() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log();
     changeUserInfo({ ...currentUser, ...values });
   }
 
