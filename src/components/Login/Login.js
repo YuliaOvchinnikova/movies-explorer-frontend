@@ -4,9 +4,9 @@ import Logo from '../../components/common/Logo/Logo.js';
 import useFormWithValidation from '../../utils/useFormWithValidation.js';
 import './Login.css';
 
-function Login({ loginSubmit }) {
+function Login({ loginSubmit, error }) {
   const [values, handleChange, errors, isValid, resetForm] =
-    useFormWithValidation();
+    useFormWithValidation({ name: '', email: '', password: '' });
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -14,7 +14,7 @@ function Login({ loginSubmit }) {
   }
 
   return (
-    <main className="page">
+    <main>
       <header className="empty-header">
         <Logo />
         <h1 className="empty-header__title">Рады видеть!</h1>
@@ -28,6 +28,7 @@ function Login({ loginSubmit }) {
             className="login-section__input interactive-element"
             name="email"
             type="email"
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA_Z]{2,63}$"
             placeholder="Email"
             value={values.email ? values.email : ''}
             onChange={handleChange}
@@ -56,6 +57,7 @@ function Login({ loginSubmit }) {
               {errors.password}
             </span>
           )}
+          {error !== '' && <p>{error}</p>}
           <button
             className={
               isValid

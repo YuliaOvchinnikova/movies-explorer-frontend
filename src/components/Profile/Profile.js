@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import useFormWithValidation from '../../utils/useFormWithValidation.js';
-import Header from '../common/Header/Header.js';
 import './Profile.css';
 import { UserContext } from '../../utils/userContext.js';
 import mainApi from '../../utils/MainApi.js';
 import { useNavigate } from 'react-router-dom';
 
-function Profile({ handlePopupOpen, width }) {
+function Profile() {
   const { currentUser, setCurrentUser, setUserAuthorized } =
     React.useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
-  const [values, handleChange, errors, isValid, resetForm] =
-    useFormWithValidation();
+  const [values, handleChange, errors, isValid, resetForm, isChanged] =
+    useFormWithValidation(currentUser);
 
-  const [submittedDataIsValid, setSubmittedDataIsValid] = useState(true);
+  const [serverError, setServerError] = useState('');
 
   function changeUserInfo({ name, email }) {
     mainApi
@@ -26,7 +25,7 @@ function Profile({ handlePopupOpen, width }) {
       })
       .catch((err) => {
         console.log(err);
-        setSubmittedDataIsValid(false);
+        setServerError(err.message);
       });
   }
 
@@ -52,21 +51,17 @@ function Profile({ handlePopupOpen, width }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    console.log();
     changeUserInfo({ ...currentUser, ...values });
   }
 
   function handleFormChange(e) {
-    setSubmittedDataIsValid(true);
+    setServerError('');
     handleChange(e);
   }
 
   return (
-    <main className="page">
-      <Header
-        authorized={true}
-        handlePopupOpen={handlePopupOpen}
-        width={width}
-      />
+    <main>
       <section className="profile-section">
         <h1 className="profile-section__title">Привет, {currentUser.name}!</h1>
         <form className="profile-section__form" onSubmit={handleSubmit}>
@@ -83,7 +78,7 @@ function Profile({ handlePopupOpen, width }) {
               name="name"
               type="text"
               placeholder="Name"
-              value={values.name ? values.name : currentUser.name}
+              value={values.name}
               onChange={handleFormChange}
               required
               pattern="^[а-яА-ЯёЁa-zA-Z\s\-]+$"
@@ -108,7 +103,7 @@ function Profile({ handlePopupOpen, width }) {
               name="email"
               type="email"
               placeholder="Email"
-              value={values.email ? values.email : currentUser.email}
+              value={values.email}
               onChange={handleFormChange}
               required
               min-length="5"
@@ -119,25 +114,58 @@ function Profile({ handlePopupOpen, width }) {
           {errors?.email && (
             <span className="profile-section__input-error">{errors.email}</span>
           )}
-          {!submittedDataIsValid && (
+          {serverError !== '' && (
             <p className="profile-section__error">
-              При обновлении профиля произошла ошибка.
+              При обновлении профиля произошла ошибка: {serverError}
             </p>
           )}
 
-          {isEditing && (
-            <button
-              className={
-                !isValid || !submittedDataIsValid
-                  ? 'profile-section__save-button profile-section__save-button_disable'
-                  : 'profile-section__save-button interactive-element'
-              }
-              disabled={!isValid || !submittedDataIsValid}
-              type="submit"
-            >
-              Сохранить
-            </button>
-          )}
+          {
+            isEditing &&
+              (!isValid || serverError !== '' || !isChanged ? (
+                <>
+                  <button
+                    className="profile-section__save-button profile-section__save-button_disable"
+                    disabled={true}
+                    type="submit"
+                  >
+                    Сохранить
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      resetForm();
+                      setServerError('');
+                      setIsEditing(false);
+                    }}
+                    className="profile-section__back-button interactive-element"
+                  >
+                    Назад
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="profile-section__save-button interactive-element"
+                  disabled={false}
+                  type="submit"
+                >
+                  Сохранить
+                </button>
+              ))
+
+            // <button
+            //   className={
+            //     !isValid || serverError !== '' || !isChanged
+            //       ? 'profile-section__save-button profile-section__save-button_disable'
+            //       : 'profile-section__save-button interactive-element'
+            //   }
+            //   disabled={!isValid || serverError !== '' || !isChanged}
+            //   type="submit"
+            // >
+            //   Сохранить
+            // </button>
+            // {}
+          }
         </form>
 
         {!isEditing && (

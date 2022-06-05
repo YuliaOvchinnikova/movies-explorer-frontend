@@ -14,6 +14,7 @@ import mainApi from '../../utils/MainApi.js';
 import useWindowSize from '../../utils/useWindowSize.js';
 import ProtectedRoute from '../ProtectedRoute.js';
 import { UserContext } from '../../utils/userContext.js';
+import Header from '../common/Header/Header.js';
 
 function App() {
   const [width] = useWindowSize();
@@ -24,6 +25,8 @@ function App() {
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState();
+
+  const [serverError, setServerError] = useState('');
 
   useEffect(() => {
     mainApi
@@ -53,22 +56,27 @@ function App() {
   }
 
   function registrationSubmit({ name, email, password }) {
+    setServerError('');
     register(name, email, password)
       .then(() => {
-        navigate('/signin');
+        setUserAuthorized(true);
+        navigate('/movies');
       })
       .catch((err) => {
+        setServerError(err.message);
         console.log(err);
       });
   }
 
   function loginSubmit({ email, password }) {
+    setServerError('');
     login(email, password)
       .then(() => {
         setUserAuthorized(true);
-        navigate('/movies', { replace: true });
+        navigate('/movies');
       })
       .catch((err) => {
+        setServerError(err.message);
         console.log(err);
       });
   }
@@ -78,12 +86,18 @@ function App() {
   }
 
   return (
-    <>
+    <div className="page">
       <Routes>
         <Route
           path="/movies"
           element={
             <ProtectedRoute authorized={userAuthorized}>
+              <Header
+                authorized={true}
+                handlePopupOpen={handlePopupOpen}
+                width={width}
+                isMain={false}
+              />
               <Movies handlePopupOpen={handlePopupOpen} width={width} />
             </ProtectedRoute>
           }
@@ -92,7 +106,13 @@ function App() {
           path="/saved-movies"
           element={
             <ProtectedRoute authorized={userAuthorized}>
-              <SavedMovies handlePopupOpen={handlePopupOpen} width={width} />
+              <Header
+                authorized={true}
+                handlePopupOpen={handlePopupOpen}
+                width={width}
+                isMain={false}
+              />
+              <SavedMovies width={width} />
             </ProtectedRoute>
           }
         />
@@ -103,7 +123,13 @@ function App() {
               <UserContext.Provider
                 value={{ currentUser, setCurrentUser, setUserAuthorized }}
               >
-                <Profile handlePopupOpen={handlePopupOpen} width={width} />
+                <Header
+                  authorized={true}
+                  handlePopupOpen={handlePopupOpen}
+                  width={width}
+                  isMain={false}
+                />
+                <Profile width={width} />
               </UserContext.Provider>
             </ProtectedRoute>
           }
@@ -112,24 +138,46 @@ function App() {
         <Route
           path="/"
           element={
+            <>
+              <Header
+                authorized={userAuthorized}
+                handlePopupOpen={handlePopupOpen}
+                width={width}
+                isMain={true}
+              />
+              <Main />
+            </>
+          }
+        />
+        <Route
+          path="/signin"
+          element={
             userAuthorized ? (
-              <Navigate to="/movies" replace />
+              <Navigate to="/" />
             ) : (
-              <Main width={width} />
+              <Login loginSubmit={loginSubmit} error={serverError} />
             )
           }
         />
-        <Route path="/signin" element={<Login loginSubmit={loginSubmit} />} />
         <Route
           path="/signup"
-          element={<Register registrationSubmit={registrationSubmit} />}
+          element={
+            userAuthorized ? (
+              <Navigate to="/" />
+            ) : (
+              <Register
+                registrationSubmit={registrationSubmit}
+                error={serverError}
+              />
+            )
+          }
         />
-        <Route path="*" element={<Error></Error>} />
+        <Route path="*" element={<Error />} />
       </Routes>
       {isPopupOpen && width < 1024 && (
         <Popup handlePopupClose={handlePopupClose} />
       )}
-    </>
+    </div>
   );
 }
 

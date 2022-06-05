@@ -4,9 +4,9 @@ import Logo from '../../components/common/Logo/Logo.js';
 import useFormWithValidation from '../../utils/useFormWithValidation.js';
 import './Register.css';
 
-function Register({ registrationSubmit }) {
+function Register({ registrationSubmit, error }) {
   const [values, handleChange, errors, isValid, resetForm] =
-    useFormWithValidation();
+    useFormWithValidation({ name: '', email: '', password: '' });
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -14,7 +14,7 @@ function Register({ registrationSubmit }) {
   }
 
   return (
-    <main className="page">
+    <main>
       <header className="empty-header">
         <Logo />
         <h1 className="empty-header__title">Добро пожаловать!</h1>
@@ -76,6 +76,7 @@ function Register({ registrationSubmit }) {
               {errors.password}
             </span>
           )}
+          {error !== '' && <p>{error}</p>}
           <button
             className={
               isValid

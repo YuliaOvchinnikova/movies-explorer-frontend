@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import profileLogo from '../../../images/profile-logo.svg';
 import './Navigation.css';
 
-function Navigation({ authorized, handlePopupOpen, width }) {
+function Navigation({ authorized, handlePopupOpen, width, isMain }) {
+  const theme = isMain ? 'white' : 'black';
+
   return (
     <>
       {authorized ? (
@@ -19,13 +21,13 @@ function Navigation({ authorized, handlePopupOpen, width }) {
                 <div className="navigation__cover">
                   <Link
                     to="/movies"
-                    className="navigation__films-link navigation__link interactive-element"
+                    className={`navigation__films-link navigation__films-link_${theme} navigation__link interactive-element`}
                   >
                     Фильмы
                   </Link>
                   <Link
                     to="/saved-movies"
-                    className="navigation__likedFilm-link navigation__link interactive-element"
+                    className={`navigation__likedFilm-link navigation__likedFilm-link_${theme} navigation__link interactive-element`}
                   >
                     Сохраненные фильмы
                   </Link>
@@ -35,7 +37,7 @@ function Navigation({ authorized, handlePopupOpen, width }) {
                   className="navigation__cover interactive-element"
                 >
                   <p
-                    className="navigation__profile-link navigation__link"
+                    className={`navigation__profile-link navigation__profile-link_${theme} navigation__link`}
                     href="address"
                   >
                     Аккаунт

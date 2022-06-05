@@ -1,3 +1,5 @@
+import { MOVIES_URL } from './constants.js';
+
 class MoviesApi {
   constructor({ address }) {
     this._address = address;
@@ -18,16 +20,15 @@ class MoviesApi {
     return fetch(`${this._address}`, {
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
     }).then(this._checkResponse);
   }
 }
 
 const config = {
-  address: 'https://api.nomoreparties.co/beatfilm-movies',
+  address: `${MOVIES_URL}/beatfilm-movies`,
 };
 
 const moviesApi = new MoviesApi(config);
 
 export default moviesApi;
-

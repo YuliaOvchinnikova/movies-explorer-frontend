@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../common/Header/Header.js';
 import SearchForm from '../common/SearchForm/SearchForm.js';
 import MoviesCardList from '../common/MoviesCardList/MoviesCardList.js';
 import Footer from '../common/Footer/Footer.js';
 import MoviesCard from '../common/MoviesCard/MoviesCard.js';
 import mainApi from '../../utils/MainApi.js';
+import { SHORTFILM_LENGTH } from '../../utils/constants.js';
+import { calculateInitialCardsNumber } from '../../utils/helpers.js';
 
 import './SavedMovies.css';
 
-function SavedMovies({ handlePopupOpen, width }) {
+function SavedMovies({ width }) {
   const [savedMovies, setSavedMovies] = useState([]);
   const [shortFilms, setShortFilms] = useState(false);
   const [query, setQuery] = useState('');
+  const params = calculateInitialCardsNumber(width);
+  const [cardsNumber] = useState(params[0]);
 
   useEffect(() => {
     mainApi
@@ -48,12 +51,7 @@ function SavedMovies({ handlePopupOpen, width }) {
   }
 
   return (
-    <main className="page">
-      <Header
-        authorized={true}
-        handlePopupOpen={handlePopupOpen}
-        width={width}
-      />
+    <main>
       <SearchForm
         handleSearchSubmit={handleSearchSubmit}
         query={query}
@@ -66,14 +64,16 @@ function SavedMovies({ handlePopupOpen, width }) {
           .filter(
             (movie) =>
               movie.nameRU.toLowerCase().includes(query) &&
-              (shortFilms ? movie.duration <= 40 : true)
+              (shortFilms ? movie.duration <= SHORTFILM_LENGTH : true)
           )
+          .slice(0, cardsNumber)
           .map((savedMovie) => (
             <MoviesCard
               key={savedMovie._id}
               title={savedMovie.nameRU}
               duration={savedMovie.duration}
               image={savedMovie.image}
+              trailerLink={savedMovie.trailerLink}
             >
               <button
                 className="card__button card__button_saved interactive-element"

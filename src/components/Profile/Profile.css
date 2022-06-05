@@ -128,9 +128,19 @@ input:-webkit-autofill:focus {
   color: #FF004C;
   position: absolute;
   top: 250px;
-  left: 20%;
   display: inline-block;
+  margin: 0 auto;
+}
+
+.profile-section__back-button {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.2;
+  text-align: center;
+  background-color: transparent;
+  border: none;
   margin: 0;
+  padding: 0;
 }
 
 @media screen and (max-width: 1023px) {

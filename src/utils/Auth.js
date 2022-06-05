@@ -1,26 +1,28 @@
-export const BASE_URL = 'http://api.movies-library.nomoredomains.work';
+import { PRODUCTION_URL } from './constants.js';
 
-function checkResponse(res) {
+async function checkResponse(res) {
   if (res.ok) {
     return res.json();
   } else {
-    return Promise.reject(`Ошибка: ${res.status}`);
+    const data = await res.json();
+    return Promise.reject({ status: res.status, message: data.message });
   }
 }
 
-function checkEmptyResponse(res) {
+async function checkEmptyResponse(res) {
   if (res.ok) {
     return Promise.resolve({});
   } else {
+    const data = await res.json();
     return Promise.reject({
       status: res.status,
-      text: `Ошибка: ${res.status}`,
+      message: data.message,
     });
   }
 }
 
 export const register = (name, email, password) => {
-  return fetch(`${BASE_URL}/signup`, {
+  return fetch(`${PRODUCTION_URL}/signup`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -31,7 +33,7 @@ export const register = (name, email, password) => {
 };
 
 export const login = (email, password) => {
-  return fetch(`${BASE_URL}/signin`, {
+  return fetch(`${PRODUCTION_URL}/signin`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -43,7 +45,7 @@ export const login = (email, password) => {
 };
 
 export const signout = () => {
-  return fetch(`${BASE_URL}/signout`, {
+  return fetch(`${PRODUCTION_URL}/signout`, {
     method: 'GET',
     credentials: 'include',
   }).then(checkEmptyResponse);

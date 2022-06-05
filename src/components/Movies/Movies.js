@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../common/Header/Header.js';
 import SearchForm from '../common/SearchForm/SearchForm.js';
 import MoviesCardList from '../common/MoviesCardList/MoviesCardList.js';
 import MoreButton from '../common/MoreButton/MoreButton.js';
@@ -8,10 +7,13 @@ import MoviesCard from '../common/MoviesCard/MoviesCard.js';
 import Preloader from '../common/Preloader/Preloader.js';
 import mainApi from '../../utils/MainApi.js';
 import moviesApi from '../../utils/MoviesApi.js';
+import { SHORTFILM_LENGTH, MOVIES_URL } from '../../utils/constants.js';
+import { calculateInitialCardsNumber } from '../../utils/helpers.js';
+import ErrorPopup from '../common/ErrorPopup/ErrorPopup.js';
 
 import './Movies.css';
 
-function Movies({ handlePopupOpen, width }) {
+function Movies({ width }) {
   const storedFilteredMovies = localStorage.getItem('filteredMovies');
   const storedQuery = localStorage.getItem('query');
   const storedcheckbox = localStorage.getItem('checkbox');
@@ -31,13 +33,14 @@ function Movies({ handlePopupOpen, width }) {
   const [savedMovies, setSavedMovies] = useState([]);
 
   const [serverError, setServerError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   function updateFilteredMovies(movies, queryString, isShortMovies) {
     queryString = queryString.toLowerCase();
     const filtered = movies.filter(
       (movie) =>
         movie.nameRU.toLowerCase().includes(queryString) &&
-        (isShortMovies ? movie.duration <= 40 : true)
+        (isShortMovies ? movie.duration <= SHORTFILM_LENGTH : true)
     );
     localStorage.setItem('filteredMovies', JSON.stringify(filtered));
     setFilteredMovies(filtered);
@@ -93,8 +96,8 @@ function Movies({ handlePopupOpen, width }) {
   function handleSaveMovie(movie) {
     const movieToSave = {
       ...movie,
-      image: `https://api.nomoreparties.co/${movie.image.url}`,
-      thumbnail: `https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`,
+      image: `${MOVIES_URL}/${movie.image.url}`,
+      thumbnail: `${MOVIES_URL}/${movie.image.formats.thumbnail.url}`,
       movieId: movie.id,
     };
     mainApi
@@ -104,6 +107,9 @@ function Movies({ handlePopupOpen, width }) {
       })
       .catch((err) => {
         console.log(err);
+        setErrorMessage(
+          err instanceof TypeError ? 'Сервер недоступен' : err.message
+        );
       });
   }
 
@@ -125,16 +131,8 @@ function Movies({ handlePopupOpen, width }) {
       });
   }
 
-  function calculateInitialCardsNumber() {
-    if (width >= 1280) {
-      return [12, 3];
-    }
-    if (width >= 768) {
-      return [8, 2];
-    }
-    return [5, 1];
-  }
-  const params = calculateInitialCardsNumber();
+  const params = calculateInitialCardsNumber(width);
+
   const [cardsNumber, setCardsNumber] = useState(params[0]);
 
   function handleMoreCards() {
@@ -152,12 +150,14 @@ function Movies({ handlePopupOpen, width }) {
   }
 
   return (
-    <main className="page">
-      <Header
-        authorized={true}
-        handlePopupOpen={handlePopupOpen}
-        width={width}
-      />
+    <main>
+      {errorMessage !== '' && (
+        <ErrorPopup
+          errorText={errorMessage}
+          onClose={() => setErrorMessage('')}
+        />
+      )}
+
       <SearchForm
         handleSearchSubmit={handleSearchSubmit}
         query={query}
@@ -175,7 +175,7 @@ function Movies({ handlePopupOpen, width }) {
               key={movie.id}
               title={movie.nameRU}
               duration={movie.duration}
-              image={`https://api.nomoreparties.co/${movie.image.url}`}
+              image={`${MOVIES_URL}/${movie.image.url}`}
               trailerLink={movie.trailerLink}
             >
               {isMovieSaved(movie.id) ? (

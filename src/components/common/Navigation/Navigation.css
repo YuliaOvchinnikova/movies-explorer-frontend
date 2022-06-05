@@ -22,6 +22,14 @@
   text-decoration: none;
 }
 
+.navigation__films-link_white {
+  color: #fff;
+}
+
+.navigation__films-link_black {
+  color: #000;
+}
+
 .navigation__likedFilm-link {
   font-weight: 400;
   font-size: 13px;
@@ -29,11 +37,27 @@
   text-decoration: none;
 }
 
+.navigation__likedFilm-link_white {
+  color: #fff
+}
+
+.navigation__likedFilm-link_black {
+  color: #000
+}
+
 .navigation__profile-link {
   font-weight: 500;
   font-size: 14px;
   line-height: 1.2;
   margin-right: 13px;
+}
+
+.navigation__profile-link_white {
+  color: #fff
+}
+
+.navigation__profile-link_black {
+  color: #000
 }
 
 .navigation__profile-logo {
@@ -83,6 +107,7 @@
   border: none;
   cursor: pointer;
 }
+
 
 @media screen and (max-width: 1023px) {
 

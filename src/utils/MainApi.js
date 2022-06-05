@@ -1,16 +1,18 @@
+import { PRODUCTION_URL } from './constants';
+
 class MainApi {
   constructor({ address }) {
     this._address = address;
   }
 
-  _checkResponse(res) {
+  async _checkResponse(res) {
+    console.log(res);
     if (res.ok) {
       return res.json();
     } else {
-      return Promise.reject({
-        status: res.status,
-        text: `Ошибка: ${res.status}`,
-      });
+      console.log(res);
+      const data = await res.json();
+      return Promise.reject({ status: res.status, message: data.message });
     }
   }
 
@@ -100,7 +102,7 @@ class MainApi {
 }
 
 const config = {
-  address: 'http://api.movies-library.nomoredomains.work',
+  address: PRODUCTION_URL,
 };
 
 const mainApi = new MainApi(config);

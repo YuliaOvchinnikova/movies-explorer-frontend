@@ -50,6 +50,13 @@
   right: 7px;
 }
 
+@media screen and (max-width: 1279px) {
+  .searchForm {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
 @media screen and (max-width: 1023px) {
   .searchForm-section {
     max-width: calc(100% - 30px*2);
